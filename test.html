@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+    html {margin-top:40px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class=col-lg-12>
+        <div id="drop_zone" class="well"><center><h1>Drop Your CSV Here</h1></center></div>
+    </div>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//epoch.app/po/papaparse.min.js"></script>
+<script>
+    $.PAYLOAD = new Object();
+
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var files = evt.dataTransfer.files; 
+            console.log('Caught a File!');
+            doUpload(files[0]);
+            console.log($.PAYLOAD);
+        }
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }
+
+        var dropZone = document.getElementById('drop_zone');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+
+    function doUpload(e) { 
+        console.log('attempt');
+        Papa.parse(e, {
+            config: {
+                header:true
+            },
+            before: function(file, inputElem){ console.log('Attempting to Parse...')},
+            error: function(err, file, inputElem, reason){ console.log(err); },
+            complete: function(results, file){ $.PAYLOAD = results; }
+        });
+    }
+</script>
+</body>
+</html>

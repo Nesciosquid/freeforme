@@ -1,0 +1,36 @@
+{
+  "name": "freeforme",
+  "devDependencies": {
+    "mocha": ">=2.2.5",
+    "babel": ">=5.5.5",
+    "browserify": ">=10.2.4",
+    "babelify": ">=6.1.2",
+    "watchify": ">=3.2.2",
+    "should": ">=7.0.2"
+  },
+  "dependencies": {
+  },
+  "version": "0.1.0",
+  "description": "Freeform survey response processing for humans.",
+  "main": "3DuFApp.js",
+  "scripts": {
+    "compile": "node_modules/.bin/browserify ./src/app.js -t babelify --outfile ./app.js",
+    "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register -R spec ./src/test/",
+    "prepublish": "npm run compile",
+    "watch_compile": "node_modules/.bin/watchify ./src/app.js -t babelify -v --outfile ./app.js",
+    "watch_test": "node_modules/.bin/mocha --watch --recursive --compilers js:babel/register -R min ./src/test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nesciosquid/freeforme.git"
+  },
+  "keywords": [
+    "forms"
+  ],
+  "author": "Aaron W. Heuckroth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nesciosquid/freeforme/issues"
+  },
+  "homepage": "https://github.com/Nesciosquid/freeforme#readme"
+}
