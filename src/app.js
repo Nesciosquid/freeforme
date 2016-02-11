@@ -5,6 +5,7 @@ var Dragula = require("dragula");
 var HTMLUtils = require("./htmlUtils.js");
 var SurveyResponse = require("./SurveyResponse.js");
 var ResponseType = require("./responseType.js");
+var ResponseCategory = require("./responseCategory.js");
 
 var allResponses = [];
 var headers = [];
@@ -13,6 +14,11 @@ var responseCategories = {};
 var data = [];
 
 var drake = Dragula();
+
+var responseIDsToObjects = {};
+var categoryIDsToObjects = {};
+
+var drakes = {};
 
 function setupDragAndDropLoad(selector) {
         let dnd = new HTMLUtils.DnDFileController(selector, function(files) {
@@ -38,56 +44,132 @@ function clear(){
     responseTypes = [];
     responseCategories = {};
     data = [];
+    drakes = {};
+
+    var lists = document.getElementById("lists");
+    while (lists.firstChild) {
+        lists.removeChild(lists.firstChild);
+    }
+}
+
+function createHeaders(){
+    headers = data[0]; 
+    for (let i in headers){
+        let header = headers[i];
+        for (let j in headers){
+            let compare = headers[j];
+            if (i != j && header == compare){
+                headers[j] = headers[j] + j;
+            }
+        }
+    }
 }
 
 function processCSV(csv){
     clear();
     let processed = Papa.parse(csv);
     data = processed.data;
-    headers = data[0];
+    createHeaders();
     createSurveyResponses();
     collateResponses();
     createDivs();
 }
 
-function addCountBadge(element, count){
-    var badge = document.createElement("span");
-    badge.innerHTML = count;
-    HTMLUtils.addClass(badge, "count-badge");
-    element.appendChild(badge);
+function updateCountBadge(element, count){
+    element.getElementsByClassName("count-badge")[0].innerHTML = count;
 }
 
-function createDivs(){
-    var lists = document.getElementById("lists");
-    while (lists.firstChild) {
-        lists.removeChild(lists.firstChild);
-    }
+function addCountBadge(element, count){
+    var badge = document.createElement("span");
+    HTMLUtils.addClass(badge, "count-badge");
+    element.appendChild(badge);
+    updateCountBadge(element, count);
+}
+
+function addResponseValue(element, value){
+    let responseValue = document.createElement("span");
+    responseValue.innerHTML = value;
+    element.appendChild(responseValue);
+}
+
+function createResponseCard(responseType){
+    document.createElement("div");
+    let card = document.createElement("div");
+    HTMLUtils.addClass(card, "response-card");
+    card.setAttribute("id", responseType.id)
+    addResponseValue(card, responseType.responseString);
+    addCountBadge(card, responseType.getResponseCount());
+    responseIDsToObjects[card.id] = responseType;
+    return card;
+}
+
+function createCategoryDiv(responseCategory){
+    let categoryDiv = document.createElement("div");
+    let draggingDiv = document.createElement("div");
+    draggingDiv.setAttribute("id", responseCategory.id);
+    HTMLUtils.addClass(draggingDiv, "card-list");
+    categoryDiv.appendChild(createCategoryTitle(responseCategory));
+    categoryDiv.appendChild(draggingDiv);
+    categoryIDsToObjects[draggingDiv.id] = responseCategory;
+    return categoryDiv;
+}
+
+function getDraggingDiv(categoryDiv){
+    return categoryDiv.getElementsByClassName("card-list")[0];
+}
+
+function createCategoryTitle(responseCategory){
+    let title = document.createElement("span");
+    title.innerHTML = responseCategory.name;
+    HTMLUtils.addClass(title, "category-title");
+    return title;
+}
+
+function createHeaderTitle(header){
+    let title = document.createElement("span");
+    title.innerHTML = header;
+    HTMLUtils.addClass(title, "header-title");
+    return title;
+}
+
+function createHeaderDiv(header){
+    let headerDiv = document.createElement("div")
+    headerDiv.appendChild(createHeaderTitle(header));
+    HTMLUtils.addClass(header, "header-container");
+    return headerDiv;
+}
+
+function initializeCategoryDiv(categoryDiv){
+    let draggingDiv = getDraggingDiv(categoryDiv);
+    let category = categoryIDsToObjects[draggingDiv.id];
+    let responseTypes = category.getResponseTypes();
     for (let i in responseTypes){
-        let headerTypes = responseTypes[i];
-        let headerTitle = document.createElement("span");
-        headerTitle.innerHTML = "<h2>"+i+"</h2>";
-        HTMLUtils.addClass(headerTitle, "header-title");
-        let headerDiv = document.createElement("div");
-        headerDiv.appendChild(headerTitle);
-        let headerList = document.createElement("div");
-        headerList.setAttribute("id", i+"_list");
-        HTMLUtils.addClass(headerList, "card-list");
-        headerDiv.appendChild(headerList);
-        //headerList.appendChild(headerTitle);
-        lists.appendChild(headerDiv);
-        drake.containers.push(headerList);
-        for (let j in headerTypes){
-            console.log("adding entry for : " + j);
-            let type = headerTypes[j];
-            let currentType = document.createElement("div");
-            HTMLUtils.addClass(currentType, "response-card");
-            currentType.setAttribute("id", type.id)
-            let typeString = document.createElement("span");
-            typeString.innerHTML = type.responseString;
-            currentType.appendChild(typeString);
-            addCountBadge(currentType, type.getResponseCount());
-            headerList.appendChild(currentType);
-        }
+        let type = responseTypes[i];
+        let card = createResponseCard(type);
+        draggingDiv.appendChild(card);
+    }
+}
+
+function setupHeader(header){
+    let headerDiv = createHeaderDiv(header);
+    let newCategory = new ResponseCategory("Uncategorized", header, true);
+    let allResponseTypes = responseTypes[header];
+    for (let i in allResponseTypes){
+        newCategory.setChildResponseType(allResponseTypes[i]);
+    }
+    let newCategoryDiv = createCategoryDiv(newCategory);
+    initializeCategoryDiv(newCategoryDiv);
+    headerDiv.appendChild(newCategoryDiv);
+    let blankCategory = new ResponseCategory("New Category", header, true);
+    let blankCategoryDiv = createCategoryDiv(blankCategory);
+    headerDiv.appendChild(blankCategoryDiv);
+    document.getElementById("lists").appendChild(headerDiv);
+    drakes[header] = Dragula([getDraggingDiv(newCategoryDiv), getDraggingDiv(blankCategoryDiv)]);
+}   
+
+function createDivs(){
+    for (let i in responseTypes){
+        setupHeader(i);
     }
 }
 

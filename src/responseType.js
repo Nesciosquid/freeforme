@@ -21,6 +21,14 @@ class ResponseType {
     getParent(){
         return this.__parent;
     }
+
+    setParent(responseCategory){
+        this.__parent = responseCategory;
+    }
+
+    removeParent(){
+        this.__parent = null;
+    }
 }
 
 module.exports = ResponseType;

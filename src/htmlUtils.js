@@ -8,6 +8,13 @@ var addClass = function(el, className){
     else el.className += ' ' + className;
 }
 
+var hasClass = function(el, className){
+  if (el.classList)
+    el.classList.contains(className);
+  else
+    new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+}
+
 // From http://stackoverflow.com/questions/8869403/drag-drop-json-into-chrome
 function DnDFileController(selector, onDropCallback) {
   var el_ = document.querySelector(selector);
@@ -46,4 +53,5 @@ function DnDFileController(selector, onDropCallback) {
 
 module.exports.removeClass = removeClass;
 module.exports.addClass = addClass;
+module.exports.hasClass = hasClass;
 module.exports.DnDFileController = DnDFileController;

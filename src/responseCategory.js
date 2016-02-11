@@ -1,9 +1,13 @@
 "use strict";
 
 class ResponseCategory {
-    constructor(name, header){
+    constructor(name, header, placeholder){
         this.name = name;
         this.header = header;
+        if (placeholder == undefined){
+            placeholder = false;
+        }
+        this.placeholder = placeholder;
         this.id = "category_" + header + "_" + this.name;
         this.__responseCount = 0;
         this.__parent = null;
@@ -28,12 +32,24 @@ class ResponseCategory {
         }
     }
 
+    removeParent(){
+        this.__parent = null;
+    }
+
     setParent(category){
         this.__parent = category;
     }
 
     getParent(category){
         return this.__parent;
+    }
+
+    getResponseTypes(){
+        return this.__childResponseTypes;
+    }
+
+    getChildCategories(){
+        return this.__childCategories;
     }
 
     setChildCategory(category){
@@ -46,10 +62,12 @@ class ResponseCategory {
 
     setChildResponseType(responseType){
         this.__childResponseTypes[responseType.responseString] = responseType;
+        responseType.setParent(this);
     }
 
     removeChildResponseType(responseType){
         this.__childResponseTypes[responseType.responseString] = null;
+        responseType.removeParent();
     }
 }
 
