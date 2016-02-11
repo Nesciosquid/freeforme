@@ -106,6 +106,7 @@ function createResponseCard(responseType){
 function createCategoryDiv(responseCategory){
     let categoryDiv = document.createElement("div");
     let draggingDiv = document.createElement("div");
+    HTMLUtils.addClass(categoryDiv, "category");
     draggingDiv.setAttribute("id", responseCategory.id);
     HTMLUtils.addClass(draggingDiv, "card-list");
     categoryDiv.appendChild(createCategoryTitle(responseCategory));
@@ -135,7 +136,7 @@ function createHeaderTitle(header){
 function createHeaderDiv(header){
     let headerDiv = document.createElement("div")
     headerDiv.appendChild(createHeaderTitle(header));
-    HTMLUtils.addClass(header, "header-container");
+    HTMLUtils.addClass(headerDiv, "header-container");
     return headerDiv;
 }
 

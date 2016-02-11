@@ -11,6 +11,17 @@
   border-radius: 9px;
 }
 
+.header-container {
+  width: 100%;
+  overflow: hidden; /* add this to contain floated children */
+}
+
+.category {
+  float:left; /* add this */
+  width: 200px;
+  margin: 5px;
+}
+
 .response-type {
     text-align: center;
     padding: 1em;
@@ -39,7 +50,6 @@
   border-radius: 3px;
   margin: 5px 5px;
   padding: 10px;
-  width: 260px;
 }
 
 .gu-mirror {
