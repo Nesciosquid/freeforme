@@ -1,110 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
-
-var Papa = require("papaparse");
-var HTMLUtils = require("./htmlUtils.js");
-
-function setupDragAndDropLoad(selector) {
-    let dnd = new HTMLUtils.DnDFileController(selector, function (files) {
-        var f = files[0];
-
-        var reader = new FileReader();
-        reader.onloadend = function (e) {
-            processCSV(this.result);
-        };
-        try {
-            reader.readAsText(f);
-        } catch (err) {
-            console.log("unable to load JSON: " + f);
-        }
-    });
-}
-
-setupDragAndDropLoad("#drop");
-
-function processCSV(csv) {
-    let processed = Papa.parse(csv);
-    var counters = {};
-    var data = processed.data;
-    var headers = data[0];
-
-    console.log("Headers");
-    console.log(headers);
-
-    for (var header in headers) {
-        counters[headers[header]] = {};
-    }
-
-    console.log("Data");
-    console.log(data);
-    console.log("Counters");
-    console.log(counters);
-
-    for (var i = 1; i < data.length; i++) {
-        let row = data[i];
-        for (var j = 0; j < row.length; j++) {
-            let header = headers[j];
-            let value = row[j];
-            if (!counters[header].hasOwnProperty(value)) {
-                counters[header][value] = 0;
-            }
-            counters[header][value] = counters[header][value] + 1;
-        }
-    }
-
-    console.log(counters);
-}
-
-},{"./htmlUtils.js":2,"papaparse":3}],2:[function(require,module,exports){
-var removeClass = function (el, className) {
-  if (el.classList) el.classList.remove(className);else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-};
-
-var addClass = function (el, className) {
-  if (el.classList) el.classList.add(className);else el.className += ' ' + className;
-};
-
-// From http://stackoverflow.com/questions/8869403/drag-drop-json-into-chrome
-function DnDFileController(selector, onDropCallback) {
-  var el_ = document.querySelector(selector);
-
-  this.dragenter = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    el_.classList.add('dropping');
-  };
-
-  this.dragover = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  this.dragleave = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    //el_.classList.remove('dropping');
-  };
-
-  this.drop = function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    el_.classList.remove('dropping');
-
-    onDropCallback(e.dataTransfer.files, e);
-  };
-
-  el_.addEventListener('dragenter', this.dragenter, false);
-  el_.addEventListener('dragover', this.dragover, false);
-  el_.addEventListener('dragleave', this.dragleave, false);
-  el_.addEventListener('drop', this.drop, false);
-};
-
-module.exports.removeClass = removeClass;
-module.exports.addClass = addClass;
-module.exports.DnDFileController = DnDFileController;
-
-},{}],3:[function(require,module,exports){
 /*!
 	Papa Parse
 	v4.1.2
@@ -1509,4 +1403,222 @@ module.exports.DnDFileController = DnDFileController;
 	}
 })(typeof window !== 'undefined' ? window : this);
 
-},{}]},{},[1]);
+},{}],2:[function(require,module,exports){
+"use strict";
+
+class SurveyResponse {
+    constructor(data, headers) {
+        this.responses = {};
+        this.responseTypes = {};
+        this.setupResponses(data, headers);
+    }
+
+    setupResponses(data, headers) {
+        if (headers.length != data.length) {
+            throw new Error("SurveyResponse headers has length " + headers.length + " but data of length " + data.length + ".");
+        } else {
+            for (var i in headers) {
+                var header = headers[i];
+                this.responses[header] = data[i];
+            }
+        }
+    }
+
+    setResponseType(header, responseType) {
+        this.responseTypes[header] = responseType;
+    }
+
+    getResponseValue(header) {
+        if (this.responses.hasOwnProperty(header)) {
+            return this.responses[header];
+        } else throw new Error("SurveyResponse does not have a response for header: " + header);
+    }
+
+    getResponseType(header) {
+        if (this.responseTypes.hasOwnProperty(header)) {
+            return this.responseTypes[header];
+        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
+    }
+}
+
+module.exports = SurveyResponse;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
+var Papa = require("papaparse");
+var HTMLUtils = require("./htmlUtils.js");
+var SurveyResponse = require("./SurveyResponse.js");
+var ResponseType = require("./responseType.js");
+
+var allResponses = [];
+var headers = [];
+var responseTypes = {};
+var responseCategories = {};
+var data = [];
+
+function setupDragAndDropLoad(selector) {
+    let dnd = new HTMLUtils.DnDFileController(selector, function (files) {
+        var f = files[0];
+
+        var reader = new FileReader();
+        reader.onloadend = function (e) {
+            processCSV(this.result);
+        };
+        try {
+            reader.readAsText(f);
+        } catch (err) {
+            console.log("unable to load JSON: " + f);
+        }
+    });
+}
+
+setupDragAndDropLoad("#drop");
+
+function processCSV(csv) {
+    let processed = Papa.parse(csv);
+    data = processed.data;
+    headers = data[0];
+    createSurveyResponses();
+    collateResponses();
+    createDivs();
+}
+
+function createDivs() {
+    var lists = document.getElementById("lists");
+    for (let i in responseTypes) {
+        let headerTypes = responseTypes[i];
+        let headerTitle = document.createElement("span");
+        headerTitle.innerHTML = i;
+        HTMLUtils.addClass(headerTitle, "header-title");
+        let headerDiv = document.createElement("div");
+        headerDiv.appendChild(headerTitle);
+        let headerList = document.createElement("ul");
+        headerList.setAttribute("id", i + "_list");
+        headerDiv.appendChild(headerList);
+        //headerList.appendChild(headerTitle);
+        lists.appendChild(headerDiv);
+        for (let j in headerTypes) {
+            console.log("adding entry for : " + j);
+            let type = headerTypes[j];
+            let currentType = document.createElement("li");
+            currentType.setAttribute("id", type.id);
+            let typeString = document.createElement("span");
+            typeString.innerHTML = type.responseString;
+            currentType.appendChild(typeString);
+            let countString = document.createElement("span");
+            countString.innerHTML = type.getResponseCount();
+            HTMLUtils.addClass(countString, "number-counter");
+            currentType.appendChild(countString);
+            headerList.appendChild(currentType);
+        }
+    }
+}
+
+function collateResponses() {
+    for (let i in headers) {
+        let header = headers[i];
+        responseTypes[header] = {};
+    }
+    console.log(responseTypes);
+
+    for (let i in allResponses) {
+        let response = allResponses[i];
+        for (let j in headers) {
+            let header = headers[j];
+            let responseValue = response.getResponseValue(header);
+            let types = responseTypes[header];
+            if (!types.hasOwnProperty(responseValue)) {
+                types[responseValue] = new ResponseType(responseValue, header);
+            }
+            let responseType = types[responseValue];
+            responseType.addResponse(response);
+        }
+    }
+}
+
+function createSurveyResponses() {
+    for (let i = 1; i < data.length; i++) {
+        let row = data[i];
+        allResponses.push(new SurveyResponse(row, headers));
+    }
+}
+
+},{"./SurveyResponse.js":2,"./htmlUtils.js":4,"./responseType.js":5,"papaparse":1}],4:[function(require,module,exports){
+var removeClass = function (el, className) {
+  if (el.classList) el.classList.remove(className);else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+};
+
+var addClass = function (el, className) {
+  if (el.classList) el.classList.add(className);else el.className += ' ' + className;
+};
+
+// From http://stackoverflow.com/questions/8869403/drag-drop-json-into-chrome
+function DnDFileController(selector, onDropCallback) {
+  var el_ = document.querySelector(selector);
+
+  this.dragenter = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    el_.classList.add('dropping');
+  };
+
+  this.dragover = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  this.dragleave = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    //el_.classList.remove('dropping');
+  };
+
+  this.drop = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    el_.classList.remove('dropping');
+
+    onDropCallback(e.dataTransfer.files, e);
+  };
+
+  el_.addEventListener('dragenter', this.dragenter, false);
+  el_.addEventListener('dragover', this.dragover, false);
+  el_.addEventListener('dragleave', this.dragleave, false);
+  el_.addEventListener('drop', this.drop, false);
+};
+
+module.exports.removeClass = removeClass;
+module.exports.addClass = addClass;
+module.exports.DnDFileController = DnDFileController;
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+class ResponseType {
+    constructor(responseString, header) {
+        this.header = header;
+        this.responseString = responseString;
+        this.id = "type_" + this.header + "_" + this.responseString;
+        this.__responseCount = 0;
+        this.__parent = null;
+    }
+
+    addResponse(surveyResponse) {
+        this.__responseCount++;
+        surveyResponse.setResponseType(this.header, this);
+    }
+
+    getResponseCount() {
+        return this.__responseCount;
+    }
+
+    getParent() {
+        return this.__parent;
+    }
+}
+
+module.exports = ResponseType;
+
+},{}]},{},[3]);
