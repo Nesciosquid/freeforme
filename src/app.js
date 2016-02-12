@@ -15,6 +15,8 @@ var data = [];
 
 var drake = Dragula();
 
+var headerDivs = {};
+
 var responseIDsToObjects = {};
 var categoryIDsToObjects = {};
 
@@ -97,7 +99,7 @@ function createResponseCard(responseType){
     let card = document.createElement("div");
     HTMLUtils.addClass(card, "response-card");
     card.setAttribute("id", responseType.id)
-    addResponseValue(card, responseType.responseString);
+    addResponseValue(card, responseType.getName());
     addCountBadge(card, responseType.getResponseCount());
     responseIDsToObjects[card.id] = responseType;
     return card;
@@ -119,11 +121,19 @@ function getDraggingDiv(categoryDiv){
     return categoryDiv.getElementsByClassName("card-list")[0];
 }
 
+function getCategoryTitle(categoryDiv){
+    return categoryDiv.getElementsByClassName("category-title")[0];
+}
+
 function createCategoryTitle(responseCategory){
+    let titleDiv = document.createElement("div");
     let title = document.createElement("span");
     title.innerHTML = responseCategory.name;
+    titleDiv.appendChild(title);
     HTMLUtils.addClass(title, "category-title");
-    return title;
+    HTMLUtils.addClass(titleDiv, "category-title-div");
+    addCountBadge(titleDiv, responseCategory.getResponseCount());
+    return titleDiv;
 }
 
 function createHeaderTitle(header){
@@ -140,6 +150,42 @@ function createHeaderDiv(header){
     return headerDiv;
 }
 
+function updateDivCategory(categoryDiv, responseCategory){
+    categoryDiv.id = responseCategory.id;
+    let title = getCategoryTitle(categoryDiv.parentElement);
+    title.innerHTML = responseCategory.name;
+    categoryIDsToObjects[categoryDiv.id] = responseCategory;
+}
+
+function dragOntoNewCategory(categoryDiv, responseDiv, sourceDiv){
+    HTMLUtils.removeClass(categoryDiv.parentElement, "blank-category");
+    let responseType = responseIDsToObjects[responseDiv.id];
+    let header = responseType.header;
+    let newCategory = new ResponseCategory(responseType.getName(), header, false);
+    updateDivCategory(categoryDiv, newCategory);
+    let newBlankDiv = createBlankCategoryDiv(header);
+    let headerDiv = headerDivs[header];
+    headerDiv.appendChild(newBlankDiv);
+    drakes[header].containers.push(getDraggingDiv(newBlankDiv));
+    dragOntoCategory(categoryDiv, responseDiv, sourceDiv);
+}
+
+function dragOntoCategory(categoryDiv, responseDiv, sourceDiv){
+    let category = categoryIDsToObjects[categoryDiv.id];
+    let responseType = responseIDsToObjects[responseDiv.id];
+    let sourceCategory = categoryIDsToObjects[sourceDiv.id];
+    category.setChildResponseType(responseType);
+    updateCountBadge(categoryDiv.parentElement, category.getResponseCount());
+    updateCountBadge(sourceDiv.parentElement, sourceCategory.getResponseCount());
+}
+
+function createBlankCategoryDiv(header){
+    let blankCategory = new ResponseCategory("New Category", header, true);
+    let blankCategoryDiv = createCategoryDiv(blankCategory);
+    HTMLUtils.addClass(blankCategoryDiv, "blank-category");
+    return blankCategoryDiv;
+}
+
 function initializeCategoryDiv(categoryDiv){
     let draggingDiv = getDraggingDiv(categoryDiv);
     let category = categoryIDsToObjects[draggingDiv.id];
@@ -148,6 +194,20 @@ function initializeCategoryDiv(categoryDiv){
         let type = responseTypes[i];
         let card = createResponseCard(type);
         draggingDiv.appendChild(card);
+    }
+}
+
+function onDrop(el, target, source, sibling){
+    console.log(target.parentElement);
+    console.log(HTMLUtils.hasClass(target.parentElement, "blank-category"));
+    if (HTMLUtils.hasClass(target.parentElement, "blank-category")){
+        dragOntoNewCategory(target, el, source);
+    } else {
+        dragOntoCategory(target, el, source);
+    }
+
+    if (source.getElementsByClassName("response-card").length == 0){
+        HTMLUtils.removeElement(source.parentElement);
     }
 }
 
@@ -161,11 +221,12 @@ function setupHeader(header){
     let newCategoryDiv = createCategoryDiv(newCategory);
     initializeCategoryDiv(newCategoryDiv);
     headerDiv.appendChild(newCategoryDiv);
-    let blankCategory = new ResponseCategory("New Category", header, true);
-    let blankCategoryDiv = createCategoryDiv(blankCategory);
+    let blankCategoryDiv = createBlankCategoryDiv(header);
     headerDiv.appendChild(blankCategoryDiv);
     document.getElementById("lists").appendChild(headerDiv);
+    headerDivs[header] = headerDiv;
     drakes[header] = Dragula([getDraggingDiv(newCategoryDiv), getDraggingDiv(blankCategoryDiv)]);
+    drakes[header].on("drop", onDrop);
 }   
 
 function createDivs(){

@@ -18,18 +18,19 @@ class ResponseCategory {
     getResponseCount(){
         let sum = 0;
         for (let i in this.__childResponseTypes){
-            type = this.__childResponseTypes[i];
+            let type = this.__childResponseTypes[i];
             if (type != null){
-                sum += type.responseCount();
+                sum += type.getResponseCount();
             }
         }
 
         for (let i in this.__childCategories){
-            category = this.__childCategories[i];
+            let category = this.__childCategories[i];
             if (category != null){
                 sum += category.getResponseCount();
             }
         }
+        return sum;
     }
 
     removeParent(){
@@ -61,6 +62,9 @@ class ResponseCategory {
     }
 
     setChildResponseType(responseType){
+        if (responseType.getParent() != null){
+            responseType.getParent().removeChildResponseType(responseType);
+        }
         this.__childResponseTypes[responseType.responseString] = responseType;
         responseType.setParent(this);
     }

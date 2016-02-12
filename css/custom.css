@@ -11,6 +11,25 @@
   border-radius: 9px;
 }
 
+.category-title {
+  text-align: center;
+}
+
+.category-title-div {
+  text-align: center;
+  padding: 0em;
+  min-height: 25px;
+}
+
+.blank-category{
+  background: #FFFFFF;
+  border: 2px dashed #DDDDDD;
+}
+
+.blank-category .card-list {
+  background-color: #F0F0F0;
+}
+
 .header-container {
   width: 100%;
   overflow: hidden; /* add this to contain floated children */
@@ -18,8 +37,9 @@
 
 .category {
   float:left; /* add this */
-  width: 200px;
+  min-width: 200px;
   margin: 5px;
+  padding: 5px;
 }
 
 .response-type {
@@ -50,6 +70,7 @@
   border-radius: 3px;
   margin: 5px 5px;
   padding: 10px;
+  min-height: 200px;
 }
 
 .gu-mirror {

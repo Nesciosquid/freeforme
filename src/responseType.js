@@ -9,6 +9,14 @@ class ResponseType {
         this.__parent = null;
     }
 
+    getName(){
+        if (this.responseString == ""){
+            return "[NO RESPONSE]";
+        } else {
+            return this.responseString;
+        }
+    }
+
     addResponse(surveyResponse){
       this.__responseCount++;
       surveyResponse.setResponseType(this.header, this);

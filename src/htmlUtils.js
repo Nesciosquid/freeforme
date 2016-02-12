@@ -8,11 +8,12 @@ var addClass = function(el, className){
     else el.className += ' ' + className;
 }
 
-var hasClass = function(el, className){
-  if (el.classList)
-    el.classList.contains(className);
-  else
-    new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+var hasClass = function(el, cls) {
+  return el.className && new RegExp("(\\s|^)" + cls + "(\\s|$)").test(el.className);
+}
+
+var removeElement = function(el){
+  el.parentElement.removeChild(el);
 }
 
 // From http://stackoverflow.com/questions/8869403/drag-drop-json-into-chrome
@@ -54,4 +55,5 @@ function DnDFileController(selector, onDropCallback) {
 module.exports.removeClass = removeClass;
 module.exports.addClass = addClass;
 module.exports.hasClass = hasClass;
+module.exports.removeElement = removeElement;
 module.exports.DnDFileController = DnDFileController;
