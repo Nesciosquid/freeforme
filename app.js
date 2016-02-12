@@ -2352,6 +2352,7 @@ var HTMLUtils = require("./htmlUtils.js");
 var SurveyResponse = require("./SurveyResponse.js");
 var ResponseType = require("./responseType.js");
 var ResponseCategory = require("./responseCategory.js");
+var Examples = require("./examples.js");
 
 var allResponses = [];
 var headers = [];
@@ -2656,6 +2657,20 @@ function responsesToCSV() {
     return csv;
 }
 
+function processJSON(json) {
+    let csv = Papa.unparse(json);
+    processCSV(csv);
+}
+
+function saveJSON() {
+    if (allResponses.length > 0) {
+        console.log("Saving json...");
+        let json = responsesToJSON();
+        let blob = new Blob([json], { type: "text/plain; charset=utf-8" });
+        saveAs(blob, "output.json");
+    }
+}
+
 function saveCSV() {
     if (allResponses.length > 0) {
         console.log("saving csv...");
@@ -2670,12 +2685,24 @@ function compressCategories() {
     processCSV(csv);
 }
 
+function loadExample() {
+    processJSON(Examples.jsonExample1);
+}
+
+loadExample();
+
 window.listResponseTypes = listResponseTypes;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;
+window.saveJSON = saveJSON;
 
-},{"./SurveyResponse.js":11,"./htmlUtils.js":13,"./responseCategory.js":14,"./responseType.js":15,"dragula":2,"papaparse":10}],13:[function(require,module,exports){
+},{"./SurveyResponse.js":11,"./examples.js":13,"./htmlUtils.js":14,"./responseCategory.js":15,"./responseType.js":16,"dragula":2,"papaparse":10}],13:[function(require,module,exports){
+var jsonExample1 = '[{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"","age":"20"},{"gender":"hir","age":"20"},{"gender":"f2m","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"female","age":"20"},{"gender":"male","age":"20"},{"gender":"female","age":"20"},{"gender":"zhe","age":"20"},{"gender":"female","age":"20"}]';
+
+module.exports.jsonExample1 = jsonExample1;
+
+},{}],14:[function(require,module,exports){
 var removeClass = function (el, className) {
   if (el.classList) el.classList.remove(className);else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 };
@@ -2734,7 +2761,7 @@ module.exports.hasClass = hasClass;
 module.exports.removeElement = removeElement;
 module.exports.DnDFileController = DnDFileController;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 class ResponseCategory {
@@ -2822,7 +2849,7 @@ class ResponseCategory {
 
 module.exports = ResponseCategory;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 class ResponseType {

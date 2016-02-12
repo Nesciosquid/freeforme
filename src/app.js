@@ -6,6 +6,7 @@ var HTMLUtils = require("./htmlUtils.js");
 var SurveyResponse = require("./SurveyResponse.js");
 var ResponseType = require("./responseType.js");
 var ResponseCategory = require("./responseCategory.js");
+var Examples = require("./examples.js");
 
 var allResponses = [];
 var headers = [];
@@ -310,6 +311,20 @@ function responsesToCSV(){
     return csv;
 }
 
+function processJSON(json){
+    let csv = Papa.unparse(json);
+    processCSV(csv);
+}
+
+function saveJSON(){
+    if (allResponses.length > 0){
+        console.log("Saving json...");
+        let json = responsesToJSON();
+        let blob = new Blob([json], {type: "text/plain; charset=utf-8"});
+        saveAs(blob, "output.json");
+    }
+}
+
 function saveCSV(){
     if (allResponses.length >0){
         console.log("saving csv...");
@@ -324,7 +339,14 @@ function compressCategories(){
     processCSV(csv);
 }
 
+function loadExample(){
+    processJSON(Examples.jsonExample1);
+}
+
+loadExample();
+
 window.listResponseTypes = listResponseTypes;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;
+window.saveJSON = saveJSON;
