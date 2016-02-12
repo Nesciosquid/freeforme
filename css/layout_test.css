@@ -1,7 +1,3 @@
-div {
-  border: 1px dashed #DDDDDD;
-}
-
 .count-badge {
   float: right;
   padding: 1px 9px 2px;
@@ -15,6 +11,32 @@ div {
   border-radius: 9px;
 }
 
+.page-title {
+  color: #3F51B5;
+  border: 2px solid #3F51B5;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.top-bar {
+  margin-top: 10px;
+  text-align: left;
+  display: block;
+}
+
+.header-div-title{
+  font-size: 24px;
+  text-align: center;
+} 
+
+.header-container {
+  margin-bottom: 10px;
+}
+
+.header-container:nth-of-type(2n) {
+  background-color: #FAFAFA;
+}
+
 .category-title {
   text-align: center;
 }
@@ -26,12 +48,16 @@ div {
 }
 
 .blank-category{
-  background: #FFFFFF;
   border: 2px dashed #DDDDDD;
+  border-radius: 10px;
 }
 
 .blank-category .card-list {
-  background-color: #F0F0F0;
+  background-color: #E0E0E0;
+}
+
+.blank-category .category-title {
+  color: #E0E0E0;
 }
 
 .header-container {
@@ -39,15 +65,9 @@ div {
   overflow: hidden; /* add this to contain floated children */
 }
 
-.category {
-  width: 100%;
-}
-
 .floating {
   float: left;
-  min-width: 200px;
-  width: auto;
-  max-width: 300px;
+  width: 32%;
 }
 
 .response-type {
@@ -68,6 +88,8 @@ div {
     box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
     padding: 6px 8px;
     min-height: 25px;
+    word-wrap:break-word;
+
 }
 
 .response-card:hover {
@@ -78,7 +100,11 @@ div {
   border-radius: 3px;
   margin: 5px 5px;
   padding: 10px;
-  min-height: 100px;
+  min-height: 43px;
+}
+
+.left-category-holder .card-list{
+  background-color: #E3F2FD;
 }
 
 .gu-mirror {
