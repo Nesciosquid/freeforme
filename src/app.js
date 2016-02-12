@@ -145,11 +145,14 @@ function getCategoryTitle(categoryDiv){
 function createCategoryTitle(responseCategory){
     let titleDiv = document.createElement("div");
     let title = document.createElement("h5");
-    title.innerHTML = responseCategory.name;
+    let titleSpan = document.createElement("span");
+    HTMLUtils.addClass(titleSpan, "category-title-span");
+    titleSpan.innerHTML = responseCategory.name;
     titleDiv.appendChild(title);
     HTMLUtils.addClass(title, "category-title");
     HTMLUtils.addClass(titleDiv, "category-title-div");
-    addCountBadge(titleDiv, responseCategory.getResponseCount());
+    title.appendChild(titleSpan);
+    addCountBadge(title, responseCategory.getResponseCount());
     return titleDiv;
 }
 
@@ -214,7 +217,8 @@ function createRightCategoryHolder(){
 function updateDivCategory(categoryDiv, responseCategory){
     categoryDiv.id = responseCategory.id;
     let title = getCategoryTitle(categoryDiv.parentElement);
-    title.innerHTML = responseCategory.name;
+    let span = title.getElementsByClassName("category-title-span")[0];
+    span.innerHTML = responseCategory.name;
     categoryIDsToObjects[categoryDiv.id] = responseCategory;
 }
 
