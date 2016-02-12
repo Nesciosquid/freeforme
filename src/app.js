@@ -27,6 +27,16 @@ function setupSaveButton(){
     button.addEventListener("click", saveCSV);
 }
 
+function setupCompressButton(){
+    let button = document.getElementById("compress-button");
+    button.addEventListener("click", compressCategories);
+}
+
+function setupButtons(){
+    setupSaveButton();
+    setupCompressButton();
+}
+
 function setupDragAndDropLoad(selector) {
         let dnd = new HTMLUtils.DnDFileController(selector, function(files) {
             var f = files[0];
@@ -44,7 +54,7 @@ function setupDragAndDropLoad(selector) {
     }
 
 setupDragAndDropLoad("#drop");
-setupSaveButton();
+setupButtons();
 
 function clear(){
     allResponses = [];
@@ -307,6 +317,11 @@ function saveCSV(){
         let blob = new Blob([csv], {type: "text/plain;charset=utf-8"});
         saveAs(blob, "output.csv");
     }
+}
+
+function compressCategories(){
+    let csv = responsesToCSV();
+    processCSV(csv);
 }
 
 window.listResponseTypes = listResponseTypes;
