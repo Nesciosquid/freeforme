@@ -33,6 +33,14 @@ class ResponseCategory {
         return sum;
     }
 
+    getResponseValue(){
+        if (this.__parent == null){
+            return this.name;
+        } else {
+            return this.__parent.getResponseValue();
+        }
+    }
+
     removeParent(){
         this.__parent = null;
     }

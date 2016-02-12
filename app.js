@@ -2333,6 +2333,12 @@ class SurveyResponse {
             return this.responseTypes[header];
         } else throw new Error("SurveyResponse does not have a response type for header:" + header);
     }
+
+    getCategorizedValue(header) {
+        if (this.responseTypes.hasOwnProperty(header)) {
+            return this.responseTypes[header].getResponseValue();
+        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
+    }
 }
 
 module.exports = SurveyResponse;
@@ -2362,6 +2368,11 @@ var categoryIDsToObjects = {};
 
 var drakes = {};
 
+function setupSaveButton() {
+    let button = document.getElementById("save-button");
+    button.addEventListener("click", saveCSV);
+}
+
 function setupDragAndDropLoad(selector) {
     let dnd = new HTMLUtils.DnDFileController(selector, function (files) {
         var f = files[0];
@@ -2379,6 +2390,7 @@ function setupDragAndDropLoad(selector) {
 }
 
 setupDragAndDropLoad("#drop");
+setupSaveButton();
 
 function clear() {
     allResponses = [];
@@ -2538,8 +2550,6 @@ function initializeCategoryDiv(categoryDiv) {
 }
 
 function onDrop(el, target, source, sibling) {
-    console.log(target.parentElement);
-    console.log(HTMLUtils.hasClass(target.parentElement, "blank-category"));
     if (HTMLUtils.hasClass(target.parentElement, "blank-category")) {
         dragOntoNewCategory(target, el, source);
     } else {
@@ -2603,6 +2613,52 @@ function createSurveyResponses() {
         allResponses.push(new SurveyResponse(row, headers));
     }
 }
+
+function listResponseTypes() {
+    for (let i in allResponses) {
+        let response = allResponses[i];
+        for (let j in headers) {
+            let header = headers[j];
+            console.log("value: " + response.getResponseValue(header));
+            console.log("type value: " + response.getResponseType(header).getResponseValue());
+        }
+    }
+}
+
+function responsesToJSON() {
+    let responses = [];
+    for (let i in allResponses) {
+        let response = allResponses[i];
+        let responseObject = {};
+        for (let j in headers) {
+            let header = headers[j];
+            responseObject[header] = response.getCategorizedValue(header);
+        }
+        responses[i] = responseObject;
+    }
+    let json = JSON.stringify(responses);
+    return json;
+}
+
+function responsesToCSV() {
+    let json = responsesToJSON();
+    let csv = Papa.unparse(json);
+    return csv;
+}
+
+function saveCSV() {
+    if (allResponses.length > 0) {
+        console.log("saving csv...");
+        let csv = responsesToCSV();
+        let blob = new Blob([csv], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "output.csv");
+    }
+}
+
+window.listResponseTypes = listResponseTypes;
+window.responsesToJSON = responsesToJSON;
+window.responsesToCSV = responsesToCSV;
+window.saveCSV = saveCSV;
 
 },{"./SurveyResponse.js":11,"./htmlUtils.js":13,"./responseCategory.js":14,"./responseType.js":15,"dragula":2,"papaparse":10}],13:[function(require,module,exports){
 var removeClass = function (el, className) {
@@ -2699,6 +2755,14 @@ class ResponseCategory {
         return sum;
     }
 
+    getResponseValue() {
+        if (this.__parent == null) {
+            return this.name;
+        } else {
+            return this.__parent.getResponseValue();
+        }
+    }
+
     removeParent() {
         this.__parent = null;
     }
@@ -2760,6 +2824,14 @@ class ResponseType {
             return "[NO RESPONSE]";
         } else {
             return this.responseString;
+        }
+    }
+
+    getResponseValue() {
+        if (this.__parent == null || this.__parent.placeholder) {
+            return this.responseString;
+        } else {
+            return this.__parent.getResponseValue();
         }
     }
 

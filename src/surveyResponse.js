@@ -35,6 +35,13 @@ class SurveyResponse {
         }
         else throw new Error("SurveyResponse does not have a response type for header:" + header);
     }
+
+    getCategorizedValue(header){
+        if (this.responseTypes.hasOwnProperty(header)){
+            return this.responseTypes[header].getResponseValue();
+        } 
+        else throw new Error("SurveyResponse does not have a response type for header:" + header);
+    }
 }
 
 module.exports = SurveyResponse;

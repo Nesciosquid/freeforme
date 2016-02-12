@@ -22,6 +22,11 @@ var categoryIDsToObjects = {};
 
 var drakes = {};
 
+function setupSaveButton(){
+    let button = document.getElementById("save-button");
+    button.addEventListener("click", saveCSV);
+}
+
 function setupDragAndDropLoad(selector) {
         let dnd = new HTMLUtils.DnDFileController(selector, function(files) {
             var f = files[0];
@@ -39,6 +44,7 @@ function setupDragAndDropLoad(selector) {
     }
 
 setupDragAndDropLoad("#drop");
+setupSaveButton();
 
 function clear(){
     allResponses = [];
@@ -198,8 +204,6 @@ function initializeCategoryDiv(categoryDiv){
 }
 
 function onDrop(el, target, source, sibling){
-    console.log(target.parentElement);
-    console.log(HTMLUtils.hasClass(target.parentElement, "blank-category"));
     if (HTMLUtils.hasClass(target.parentElement, "blank-category")){
         dragOntoNewCategory(target, el, source);
     } else {
@@ -263,3 +267,49 @@ function createSurveyResponses(){
         allResponses.push(new SurveyResponse(row, headers));
    }
 }
+
+function listResponseTypes(){
+    for (let i in allResponses){
+        let response = allResponses[i];
+        for (let j in headers){
+            let header = headers[j];
+            console.log("value: " + response.getResponseValue(header))
+            console.log("type value: " + response.getResponseType(header).getResponseValue());
+        }
+    }
+}
+
+function responsesToJSON(){
+    let responses = [];
+    for (let i in allResponses){
+        let response = allResponses[i];
+        let responseObject = {};
+        for (let j in headers){
+            let header = headers[j];
+            responseObject[header] = response.getCategorizedValue(header);
+        }
+        responses[i] = responseObject;
+    }
+    let json = JSON.stringify(responses);
+    return json;
+}
+
+function responsesToCSV(){
+    let json = responsesToJSON();
+    let csv = Papa.unparse(json);
+    return csv;
+}
+
+function saveCSV(){
+    if (allResponses.length >0){
+        console.log("saving csv...");
+        let csv = responsesToCSV();
+        let blob = new Blob([csv], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "output.csv");
+    }
+}
+
+window.listResponseTypes = listResponseTypes;
+window.responsesToJSON = responsesToJSON;
+window.responsesToCSV = responsesToCSV;
+window.saveCSV = saveCSV;

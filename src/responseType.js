@@ -17,6 +17,14 @@ class ResponseType {
         }
     }
 
+    getResponseValue(){
+        if (this.__parent == null || this.__parent.placeholder){
+            return this.responseString;
+        } else {
+            return this.__parent.getResponseValue();
+        }
+    }
+
     addResponse(surveyResponse){
       this.__responseCount++;
       surveyResponse.setResponseType(this.header, this);
