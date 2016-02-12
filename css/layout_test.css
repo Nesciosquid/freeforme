@@ -1,33 +1,56 @@
-.count-badge {
-  float: right;
-  padding: 1px 9px 2px;
-  font-size: 12.025px;
-  font-weight: bold;
-  white-space: nowrap;
-  color: #ffffff;
-  background-color: #999999;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 9px;
+.top-bar {
+  padding: 10px 0;
+  text-align: left;
+  display: block;
+  border-bottom: 1px solid #FAFAFA;
+  margin-bottom: 50px;
 }
 
 .page-title {
   color: #3F51B5;
-  border: 2px solid #3F51B5;
+  /* border: 2px solid #3F51B5; */
   border-radius: 10px;
-  text-align: center;
+  text-align: left;
+  font-size: 32px;
+  margin-bottom: 0;
+}
+.toolbar {
+  text-align: right;
+}
+.toolbar button {
+  margin-bottom: 0;
 }
 
-.top-bar {
-  margin-top: 10px;
-  text-align: left;
-  display: block;
+#lists > .category + .category {
+  margin-top: 5rem;
 }
+.count-badge {
+  float: right;
+  font-size: 1rem;
+  white-space: nowrap;
+  color: #666;
+}
+.category-title .count-badge {
+  line-height: 3rem;
+  font-size: 2rem;
+
+}
+.card-list .count-badge {
+  border-left: 1px solid #DDD;
+  background: #FAFAFA;
+  line-height: 1rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .header-div-title{
   font-size: 24px;
   text-align: center;
-} 
+}
 
 .header-container {
   margin-bottom: 10px;
@@ -39,6 +62,14 @@
 
 .category-title {
   text-align: center;
+  text-transform: capitalize;
+}
+.subcategory .category-title {
+  text-align: left;
+  padding: 10px;
+  background-color: #FAFAFA;
+  margin-bottom: 1;
+  font-size: 2rem;
 }
 
 .category-title-div {
@@ -48,12 +79,11 @@
 }
 
 .blank-category{
-  border: 2px dashed #DDDDDD;
-  border-radius: 10px;
+  .min-height: 33px;
 }
 
 .blank-category .card-list {
-  background-color: #E0E0E0;
+  background-color: #EEE;
 }
 
 .blank-category .category-title {
@@ -67,7 +97,10 @@
 
 .floating {
   float: left;
-  width: 32%;
+  width: 33.1%;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  box-sizing: border-box;
 }
 
 .response-type {
@@ -83,24 +116,31 @@
 }
 
 .response-card {
-    margin: 4px;
     background-color: #FFF;
-    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-    padding: 6px 8px;
+    box-shadow: 0 1px 0px 1px #aaa, 0 0 0 1px #AAA;
     min-height: 25px;
     word-wrap:break-word;
-
+    cursor: move;
+    border-radius: 1px;
 }
-
+.response-card + .response-card {
+  margin: 1px 0 0;
+}
+.response-card > span:first-of-type {
+  line-height: 3.5rem;
+  padding-left: 1rem;
+}
 .response-card:hover {
-    background-color: #F0F0F0;
+    background-color: #FAFAFA;
 }
 .card-list {
-  background-color: #E3E3E3;
+  background-color: #F0F0F0;
   border-radius: 3px;
-  margin: 5px 5px;
   padding: 10px;
-  min-height: 43px;
+  min-height: 55px;
+}
+.subcategory-holder .card-list .response-card:last-of-type {
+  margin-bottom: 20px;
 }
 
 .left-category-holder .card-list{

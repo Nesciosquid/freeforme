@@ -2471,7 +2471,7 @@ function createResponseCard(responseType) {
 function createCategoryDiv(responseCategory) {
     let categoryDiv = document.createElement("div");
     let draggingDiv = document.createElement("div");
-    HTMLUtils.addClass(categoryDiv, "category");
+    HTMLUtils.addClass(categoryDiv, "subcategory");
     draggingDiv.setAttribute("id", responseCategory.id);
     HTMLUtils.addClass(draggingDiv, "card-list");
     categoryDiv.appendChild(createCategoryTitle(responseCategory));
@@ -2502,20 +2502,20 @@ function createCategoryTitle(responseCategory) {
     return titleDiv;
 }
 
+function createHeaderDiv(header) {
+    let headerDiv = document.createElement("div");
+    headerDiv.appendChild(createHeaderTitle(header));
+    HTMLUtils.addClass(headerDiv, "category");
+    headerDiv.appendChild(createCategoryRow());
+    return headerDiv;
+}
+
 function createHeaderTitle(header) {
     let title = document.createElement("h2");
     //title.innerHTML = "Column " + headers.indexOf(header) + ": " + header;
     title.innerHTML = header;
-    HTMLUtils.addClass(title, "header-div-title");
+    HTMLUtils.addClass(title, "category-title");
     return title;
-}
-
-function createHeaderDiv(header) {
-    let headerDiv = document.createElement("div");
-    headerDiv.appendChild(createHeaderTitle(header));
-    HTMLUtils.addClass(headerDiv, "header-container");
-    headerDiv.appendChild(createCategoryRow());
-    return headerDiv;
 }
 
 function createCategoryRow() {
@@ -2527,28 +2527,28 @@ function createCategoryRow() {
 }
 
 function addLeftCategory(headerDiv, categoryDiv) {
-    headerDiv.getElementsByClassName("left-category-holder")[0].appendChild(categoryDiv);
+    headerDiv.getElementsByClassName("uncategorized-list")[0].appendChild(categoryDiv);
 }
 
 function removeLeftCategory(headerDiv, categoryDiv) {
-    headerDiv.getElementsByClassName("left-category-holder")[0].removeChild(categoryDiv);
+    headerDiv.getElementsByClassName("uncategorized-list")[0].removeChild(categoryDiv);
 }
 
 function addRightCategory(headerDiv, categoryDiv) {
     HTMLUtils.addClass(categoryDiv, "floating");
-    headerDiv.getElementsByClassName("right-category-holder")[0].appendChild(categoryDiv);
+    headerDiv.getElementsByClassName("subcategory-holder")[0].appendChild(categoryDiv);
 }
 
 function removeRightCategory(headerDiv, categoryDiv) {
     HTMLUtils.removeClass(categoryDiv, "floating");
-    headerDiv.getElementsByClassName("right-category-holder")[0].removeChild(categoryDiv);
+    headerDiv.getElementsByClassName("subcategory-holder")[0].removeChild(categoryDiv);
 }
 
 function createLeftCategoryHolder() {
     let holder = document.createElement("div");
     HTMLUtils.addClass(holder, "three");
     HTMLUtils.addClass(holder, "columns");
-    HTMLUtils.addClass(holder, "left-category-holder");
+    HTMLUtils.addClass(holder, "uncategorized-list");
     return holder;
 }
 
@@ -2556,7 +2556,7 @@ function createRightCategoryHolder() {
     let holder = document.createElement("div");
     HTMLUtils.addClass(holder, "nine");
     HTMLUtils.addClass(holder, "columns");
-    HTMLUtils.addClass(holder, "right-category-holder");
+    HTMLUtils.addClass(holder, "subcategory-holder");
     return holder;
 }
 
@@ -2589,6 +2589,9 @@ function dragOntoCategory(categoryDiv, responseDiv, sourceDiv) {
     updateCountBadge(categoryDiv.parentElement, category.getResponseCount());
     updateCountBadge(sourceDiv.parentElement, sourceCategory.getResponseCount());
 }
+
+// This 'New Category' gets tacked on to the ID, which means the ID has a space
+// in it. :-\
 
 function createBlankCategoryDiv(header) {
     let blankCategory = new ResponseCategory("New Category", header, true);
