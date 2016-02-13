@@ -2432,6 +2432,7 @@ function createHeaders() {
 
 function processCSV(csv) {
     clear();
+    hideInstructions();
     let processed = Papa.parse(csv);
     data = processed.data;
     createHeaders();
@@ -2643,6 +2644,10 @@ function setupHeader(header) {
     drakes[header].on("drop", onDrop);
 }
 
+function hideInstructions() {
+    document.getElementById("instructions").style.display = 'none';
+}
+
 function createDivs() {
     for (let i in responseTypes) {
         setupHeader(i);
@@ -2742,7 +2747,7 @@ function loadExample() {
     processJSON(Examples.jsonExample1);
 }
 
-loadExample();
+//loadExample();
 
 window.listResponseTypes = listResponseTypes;
 window.responsesToJSON = responsesToJSON;
@@ -2751,7 +2756,7 @@ window.saveCSV = saveCSV;
 window.saveJSON = saveJSON;
 
 },{"./SurveyResponse.js":11,"./examples.js":13,"./htmlUtils.js":14,"./responseCategory.js":15,"./responseType.js":16,"dragula":2,"papaparse":10}],13:[function(require,module,exports){
-var jsonExample1 = '[{"gender":"male","age":"21"},{"gender":"Male","age":"23"},{"gender":"female","age":"21"},{"gender":"Female","age":"22"},{"gender":"male ","age":"22"},{"gender":"female ","age":"22"},{"gender":"zhe","age":"22"},{"gender":"Woman","age":"21"},{"gender":"mlae","age":"21"},{"gender":"man","age":"21"},{"gender":"","age":"20"},{"gender":"hir","age":"22"},{"gender":"f2m","age":"20"},{"gender":"male","age":"21"},{"gender":"Male","age":"21"},{"gender":"female","age":"22"},{"gender":"Female","age":"20"},{"gender":"male ","age":"22"},{"gender":"female ","age":"22"},{"gender":"zhe","age":"21"},{"gender":"Woman","age":"22"},{"gender":"mlae","age":"20"},{"gender":"man","age":"21"},{"gender":"","age":"20"},{"gender":"male","age":"22"},{"gender":"Male","age":"22"},{"gender":"female","age":"20"},{"gender":"Female","age":"21"},{"gender":"male ","age":"21"},{"gender":"female ","age":"23"},{"gender":"zhe","age":"20"},{"gender":"Woman","age":"20"},{"gender":"male","age":"21"},{"gender":"Male","age":"22"},{"gender":"female","age":"21"},{"gender":"Female","age":"22"},{"gender":"male ","age":"22"},{"gender":"female ","age":"20"},{"gender":"zhe","age":"21"},{"gender":"Woman","age":"21"},{"gender":"male","age":"20"},{"gender":"Male","age":"20"},{"gender":"female","age":"21"},{"gender":"Female","age":"22"},{"gender":"male ","age":"21"},{"gender":"female ","age":"23"},{"gender":"zhe","age":"22"},{"gender":"Woman","age":"21"},{"gender":"male","age":"20"},{"gender":"Male","age":"23"},{"gender":"female","age":"21"},{"gender":"Female","age":"23"},{"gender":"male ","age":"23"},{"gender":"female ","age":"21"},{"gender":"zhe","age":"22"},{"gender":"Woman","age":"22"},{"gender":"male","age":"22"},{"gender":"Male","age":"22"},{"gender":"female","age":"23"},{"gender":"Female","age":"22"},{"gender":"male ","age":"22"},{"gender":"female ","age":"20"},{"gender":"zhe","age":"20"},{"gender":"Woman","age":"21"},{"gender":"male","age":"20"},{"gender":"Male","age":"21"},{"gender":"female","age":"21"},{"gender":"Female","age":"22"},{"gender":"male ","age":"21"},{"gender":"female ","age":"22"},{"gender":"zhe","age":"20"},{"gender":"Woman","age":"23"}]';
+var jsonExample1 = '[{"gender":"male","sexual orientation":"gay"},{"gender":"Male","sexual orientation":"gay"},{"gender":"female","sexual orientation":"gay"},{"gender":"Female","sexual orientation":"bisexual"},{"gender":"male ","sexual orientation":"homosexual"},{"gender":"female ","sexual orientation":"queer"},{"gender":"zhe","sexual orientation":"bisexual"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"mlae","sexual orientation":"straight"},{"gender":"genderfluid","sexual orientation":"straight"},{"gender":"","sexual orientation":"gay"},{"gender":"hir","sexual orientation":"a"},{"gender":"f2m","sexual orientation":"straight"},{"gender":"male","sexual orientation":"gay"},{"gender":"Male","sexual orientation":"none"},{"gender":"female","sexual orientation":"lesbian"},{"gender":"Female","sexual orientation":"l"},{"gender":"male ","sexual orientation":"gay"},{"gender":"female ","sexual orientation":"a"},{"gender":"zhe","sexual orientation":"gay"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"mlae","sexual orientation":"straight"},{"gender":"man","sexual orientation":"straight"},{"gender":"","sexual orientation":"homosexual"},{"gender":"xy","sexual orientation":"straight"},{"gender":"Male","sexual orientation":"bisexual"},{"gender":"female","sexual orientation":"straight"},{"gender":"Female","sexual orientation":""},{"gender":"male ","sexual orientation":"bisexual"},{"gender":"female ","sexual orientation":"straight"},{"gender":"zhe","sexual orientation":"lesbian"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"male","sexual orientation":"straight"},{"gender":"Male","sexual orientation":"asexual"},{"gender":"female","sexual orientation":"homosexual"},{"gender":"Female","sexual orientation":"bisexual"},{"gender":"male ","sexual orientation":"asexual"},{"gender":"female ","sexual orientation":"bicurious"},{"gender":"zhe","sexual orientation":"queer"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"male","sexual orientation":"homosexual"},{"gender":"Male","sexual orientation":"queer"},{"gender":"female","sexual orientation":"straight"},{"gender":"Female","sexual orientation":"straight"},{"gender":"male ","sexual orientation":"homosexual"},{"gender":"female ","sexual orientation":"queer"},{"gender":"zhe","sexual orientation":"bisexual"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"male","sexual orientation":""},{"gender":"Male","sexual orientation":"queer"},{"gender":"female","sexual orientation":"trans"},{"gender":"Female","sexual orientation":"bicurious"},{"gender":"male ","sexual orientation":"asexual"},{"gender":"female ","sexual orientation":"a"},{"gender":"zhe","sexual orientation":"l"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"male","sexual orientation":"g"},{"gender":"Male","sexual orientation":"g"},{"gender":"female","sexual orientation":"l"},{"gender":"Female","sexual orientation":"l"},{"gender":"male ","sexual orientation":"pansexual"},{"gender":"female ","sexual orientation":"bicurious"},{"gender":"zhe","sexual orientation":"demisexual"},{"gender":"Woman","sexual orientation":"pansexual"},{"gender":"male","sexual orientation":"demisexual"},{"gender":"Male","sexual orientation":"demisexual"},{"gender":"female","sexual orientation":"l"},{"gender":"Female","sexual orientation":"straight"},{"gender":"male ","sexual orientation":"straight"},{"gender":"female ","sexual orientation":"straight"},{"gender":"zhe","sexual orientation":"pansexual"},{"gender":"Woman","sexual orientation":"straight"}]';
 
 module.exports.jsonExample1 = jsonExample1;
 

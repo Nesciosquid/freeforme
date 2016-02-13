@@ -86,6 +86,7 @@ function createHeaders(){
 
 function processCSV(csv){
     clear();
+    hideInstructions();
     let processed = Papa.parse(csv);
     data = processed.data;
     createHeaders();
@@ -297,6 +298,10 @@ function setupHeader(header){
     drakes[header].on("drop", onDrop);
 }
 
+function hideInstructions(){
+    document.getElementById("instructions").style.display = 'none';
+}
+
 function createDivs(){
     for (let i in responseTypes){
         setupHeader(i);
@@ -396,7 +401,7 @@ function loadExample(){
     processJSON(Examples.jsonExample1);
 }
 
-loadExample();
+//loadExample();
 
 window.listResponseTypes = listResponseTypes;
 window.responsesToJSON = responsesToJSON;

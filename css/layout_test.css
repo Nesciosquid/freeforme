@@ -21,6 +21,10 @@
   margin-bottom: 0;
 }
 
+#instructions {
+  text-align: center;
+}
+
 #lists > .category + .category {
   margin-top: 5rem;
 }
