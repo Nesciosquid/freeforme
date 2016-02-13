@@ -182,10 +182,12 @@ function createCategoryRow(){
 
 function addLeftCategory(headerDiv, categoryDiv){
     headerDiv.getElementsByClassName("uncategorized-list")[0].appendChild(categoryDiv);
+    HTMLUtils.addClass(categoryDiv, "locked-category");
 }
 
 function removeLeftCategory(headerDiv, categoryDiv){
     headerDiv.getElementsByClassName("uncategorized-list")[0].removeChild(categoryDiv);
+    HTMLUtils.removeClass(categoryDiv, "locked-category");
 }
 
 function addRightCategory(headerDiv, categoryDiv){
@@ -272,7 +274,7 @@ function onDrop(el, target, source, sibling){
         dragOntoCategory(target, el, source);
     }
 
-    if (source.getElementsByClassName("response-card").length == 0){
+    if (source.getElementsByClassName("response-card").length == 0 && !HTMLUtils.hasClass(source.parentElement, "locked-category")){
         HTMLUtils.removeElement(source.parentElement);
     }
 }
