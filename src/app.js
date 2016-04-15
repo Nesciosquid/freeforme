@@ -355,7 +355,9 @@ function responsesToJSON(){
         let responseObject = {};
         for (let j in headers){
             let header = headers[j];
-            responseObject[header] = response.getCategorizedValue(header);
+            let category = header + "-catgorized";
+            responseObject[header] = response.getResponseValue(header);
+            responseObject[category] = response.getCategorizedValue(header);
         }
         responses[i] = responseObject;
     }
