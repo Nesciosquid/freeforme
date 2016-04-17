@@ -337,7 +337,7 @@ function createDivs(){
 }
 
 function renameCategory(category, newName){
-    if (newName == "" || newName = " "){
+    if (newName == "" || newName == " "){
         newName = category.name;
     }
     delete responseCategories[category.header][category.name];
@@ -364,6 +364,7 @@ function changeToInput(title){
     });
     HTMLUtils.addClass(inputBox, "category-title-input-box");
     parent.insertBefore(inputBox, parent.children[0]);
+    inputBox.focus();
 }
 
 function renameAndChangeToTitle(input){
@@ -371,12 +372,11 @@ function renameAndChangeToTitle(input){
     let title = document.createElement("span");
     HTMLUtils.addClass(title, "category-title-span");
     title.innerHTML = input.value;
+    parent.removeChild(parent.children[0]);
     title.addEventListener("click", function(event){
         changeToInput(this);
     });
-    parent.removeChild(input);
     parent.insertBefore(title, parent.children[0]);
-
     let categoryDiv = parent.parentNode.parentNode.children[1];
     let category = categoryIDsToObjects[categoryDiv.id];
     renameCategory(category, title.innerHTML);
