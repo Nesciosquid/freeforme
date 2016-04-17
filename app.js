@@ -2476,6 +2476,7 @@ function createResponseCard(responseType) {
 }
 
 function createCategoryDiv(responseCategory) {
+    console.log(responseCategory);
     let categoryDiv = document.createElement("div");
     let draggingDiv = document.createElement("div");
     HTMLUtils.addClass(categoryDiv, "subcategory");
@@ -2779,6 +2780,26 @@ function collateResponses() {
 
                 //set the response type to be the child of this category
                 category.setChildResponseType(responseType);
+            }
+        }
+    }
+
+    for (let i in allResponses) {
+        let response = allResponses[i];
+        for (let j in headers) {
+
+            let header = headers[j];
+            let split = header.split(category_suffix);
+            if (split.length == 1) {
+                let categories = responseCategories[header];
+                if (!categories.hasOwnProperty("Uncategorized")) {
+                    categories["Uncategorized"] = new ResponseCategory("Uncategorized", header);
+                }
+                let uncat = categories["Uncategorized"];
+                let rType = response.getResponseType(header);
+                if (rType.getParent() == null) {
+                    uncat.setChildResponseType(rType);
+                }
             }
         }
     }
