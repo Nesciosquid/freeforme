@@ -337,6 +337,9 @@ function createDivs(){
 }
 
 function renameCategory(category, newName){
+    if (newName == "" || newName = " "){
+        newName = category.name;
+    }
     delete responseCategories[category.header][category.name];
     responseCategories[category.header][newName] = category;
     category.name = newName;
