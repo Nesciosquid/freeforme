@@ -2,6 +2,11 @@ a {
   color: #3F8FB2;
   text-decoration: none;
 }
+
+.category-title-input-box {
+  width: 80%;
+}
+
 .container {
   display: flex;
   flex-direction: column;

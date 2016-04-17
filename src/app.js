@@ -26,6 +26,8 @@ var categoryIDsToObjects = {};
 
 var drakes = {};
 
+window.renameCategoryByHeaderAndName = renameCategoryByHeaderAndName;
+
 function setupSaveButton(){
     let button = document.getElementById("save-button");
     button.addEventListener("click", saveCSV);
@@ -152,6 +154,7 @@ function createCategoryTitle(responseCategory){
     let titleDiv = document.createElement("div");
     let title = document.createElement("h5");
     let titleSpan = document.createElement("span");
+    titleSpan.addEventListener("click", function(){changeToInput(this)});
     HTMLUtils.addClass(titleSpan, "category-title-span");
     titleSpan.innerHTML = responseCategory.name;
     titleDiv.appendChild(title);
@@ -331,6 +334,54 @@ function createDivs(){
             setupHeader(i);
         }
     }
+}
+
+function renameCategory(category, newName){
+    delete responseCategories[category.header][category.name];
+    responseCategories[category.header][newName] = category;
+    category.name = newName;
+    let element = document.getElementById(category.id);
+    let parent = element.parentNode;
+    let title = parent.children[0].children[0];
+    let span = title.children[0];
+    span.innerHTML = newName;
+}
+
+function changeToInput(title){
+    let parent = title.parentNode;
+    parent.removeChild(title);
+    let inputBox = document.createElement("input");
+    inputBox.addEventListener("keypress", function(event){
+        if (event.keyCode == 13){
+            renameAndChangeToTitle(this);
+        }   
+    });
+    inputBox.addEventListener("focusout", function(event){
+        renameAndChangeToTitle(this);
+    });
+    HTMLUtils.addClass(inputBox, "category-title-input-box");
+    parent.insertBefore(inputBox, parent.children[0]);
+}
+
+function renameAndChangeToTitle(input){
+    let parent = input.parentNode;
+    let title = document.createElement("span");
+    HTMLUtils.addClass(title, "category-title-span");
+    title.innerHTML = input.value;
+    title.addEventListener("click", function(event){
+        changeToInput(this);
+    });
+    parent.removeChild(input);
+    parent.insertBefore(title, parent.children[0]);
+
+    let categoryDiv = parent.parentNode.parentNode.children[1];
+    let category = categoryIDsToObjects[categoryDiv.id];
+    renameCategory(category, title.innerHTML);
+}
+
+function renameCategoryByHeaderAndName(header, categoryName, newName){
+    let category = responseCategories[header][categoryName];
+    renameCategory(category, newName);
 }
 
 function collateResponses(){
