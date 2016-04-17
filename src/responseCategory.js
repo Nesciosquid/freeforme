@@ -69,12 +69,12 @@ class ResponseCategory {
         this.__childCategories[category.name] = null;
     }
 
-    setChildResponseType(responseType){
-        if (responseType.getParent() != null){
-            responseType.getParent().removeChildResponseType(responseType);
+    setChildResponseType(foo){
+        if (foo.getParent() != null){
+            foo.getParent().removeChildResponseType(foo);
         }
-        this.__childResponseTypes[responseType.responseString] = responseType;
-        responseType.setParent(this);
+        this.__childResponseTypes[foo.responseString] = foo;
+        foo.setParent(this);
     }
 
     removeChildResponseType(responseType){

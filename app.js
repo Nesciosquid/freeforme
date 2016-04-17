@@ -2354,6 +2354,8 @@ var ResponseType = require("./responseType.js");
 var ResponseCategory = require("./responseCategory.js");
 var Examples = require("./examples.js");
 
+var category_suffix = "-categorized";
+
 var allResponses = [];
 var headers = [];
 var responseTypes = {};
@@ -2381,7 +2383,7 @@ function setupCompressButton() {
 
 function setupButtons() {
     setupSaveButton();
-    setupCompressButton();
+    //setupCompressButton();
 }
 
 function setupDragAndDropLoad(selector) {
@@ -2406,8 +2408,10 @@ setupButtons();
 function clear() {
     allResponses = [];
     headers = [];
-    responseTypes = [];
+    responseTypes = {};
     responseCategories = {};
+
+    window.responseCategories = responseCategories;
     data = [];
     drakes = {};
 
@@ -2597,7 +2601,7 @@ function dragOntoCategory(categoryDiv, responseDiv, sourceDiv) {
 // in it. :-\
 
 function createBlankCategoryDiv(header) {
-    let blankCategory = new ResponseCategory("New Category", header, true);
+    let blankCategory = new ResponseCategory("New", header, true);
     let blankCategoryDiv = createCategoryDiv(blankCategory);
     HTMLUtils.addClass(blankCategoryDiv, "blank-category");
     return blankCategoryDiv;
@@ -2606,9 +2610,9 @@ function createBlankCategoryDiv(header) {
 function initializeCategoryDiv(categoryDiv) {
     let draggingDiv = getDraggingDiv(categoryDiv);
     let category = categoryIDsToObjects[draggingDiv.id];
-    let responseTypes = category.getResponseTypes();
-    for (let i in responseTypes) {
-        let type = responseTypes[i];
+    let categoryResponseTypes = category.getResponseTypes();
+    for (let i in categoryResponseTypes) {
+        let type = categoryResponseTypes[i];
         let card = createResponseCard(type);
         draggingDiv.appendChild(card);
     }
@@ -2626,22 +2630,37 @@ function onDrop(el, target, source, sibling) {
     }
 }
 
+function setupCategories(header) {
+    let categories = responseCategories[header];
+    for (let i in categories) {
+        if (i != "Uncategorized") {
+            console.log("adding category for: " + i);
+            let responseCategory = categories[i];
+            let newCategoryDiv = createCategoryDiv(responseCategory);
+            initializeCategoryDiv(newCategoryDiv);
+            addRightCategory(headerDivs[header], newCategoryDiv);
+            drakes[header].containers.push(getDraggingDiv(newCategoryDiv));
+        }
+    }
+}
+
 function setupHeader(header) {
     let headerDiv = createHeaderDiv(header);
-    let newCategory = new ResponseCategory("Uncategorized", header, true);
-    let allResponseTypes = responseTypes[header];
-    for (let i in allResponseTypes) {
-        newCategory.setChildResponseType(allResponseTypes[i]);
-    }
-    let newCategoryDiv = createCategoryDiv(newCategory);
-    initializeCategoryDiv(newCategoryDiv);
-    addLeftCategory(headerDiv, newCategoryDiv);
+    let uncat = responseCategories[header]["Uncategorized"];
+
+    let uncatDiv = createCategoryDiv(uncat);
+    initializeCategoryDiv(uncatDiv);
+
+    addLeftCategory(headerDiv, uncatDiv);
+
     let blankCategoryDiv = createBlankCategoryDiv(header);
-    addRightCategory(headerDiv, blankCategoryDiv);
     document.getElementById("lists").appendChild(headerDiv);
     headerDivs[header] = headerDiv;
-    drakes[header] = Dragula([getDraggingDiv(newCategoryDiv), getDraggingDiv(blankCategoryDiv)]);
+    drakes[header] = Dragula([getDraggingDiv(uncatDiv), getDraggingDiv(blankCategoryDiv)]);
     drakes[header].on("drop", onDrop);
+
+    setupCategories(header);
+    addRightCategory(headerDiv, blankCategoryDiv);
 }
 
 function hideInstructions() {
@@ -2650,7 +2669,10 @@ function hideInstructions() {
 
 function createDivs() {
     for (let i in responseTypes) {
-        setupHeader(i);
+        let split = i.split(category_suffix);
+        if (split.length == 1) {
+            setupHeader(i);
+        }
     }
 }
 
@@ -2658,28 +2680,61 @@ function collateResponses() {
     for (let i in headers) {
         let header = headers[i];
         responseTypes[header] = {};
+        responseCategories[header] = {};
     }
-    console.log(responseTypes);
 
     for (let i in allResponses) {
         let response = allResponses[i];
         for (let j in headers) {
             let header = headers[j];
+            let split = header.split(category_suffix);
             let responseValue = response.getResponseValue(header);
             let types = responseTypes[header];
-            if (!types.hasOwnProperty(responseValue)) {
-                types[responseValue] = new ResponseType(responseValue, header);
+            if (split.length == 1) {
+                if (!types.hasOwnProperty(responseValue)) {
+                    types[responseValue] = new ResponseType(responseValue, header);
+                }
+                let responseType = types[responseValue];
+                responseType.addResponse(response);
+            } else {
+                // this is actually a category header
+
+                // the type is based on the first half of the split, before the suffix
+                let type = response.getResponseValue(split[0]);
+                types = responseTypes[split[0]];
+                // if the type doesn't exist, add it
+                if (!types.hasOwnProperty(type)) {
+                    types[type] = new ResponseType(type, split[0]);
+                }
+
+                let responseType = types[type];
+                let categories = responseCategories[split[0]];
+
+                // the name of the category is what's written in the category header column for the current response
+                let categoryName = responseValue;
+
+                // if the category doesn't exist, add it
+                if (!categories.hasOwnProperty(categoryName)) {
+                    console.log("Adding new category for: " + categoryName);
+                    categories[categoryName] = new ResponseCategory(categoryName, split[0], false);
+                }
+
+                let category = categories[categoryName];
+
+                //set the response type to be the child of this category
+                category.setChildResponseType(responseType);
             }
-            let responseType = types[responseValue];
-            responseType.addResponse(response);
         }
     }
+
+    console.log(responseTypes);
+    console.log(responseCategories);
 }
 
 function createSurveyResponses() {
     for (let i = 1; i < data.length; i++) {
         let row = data[i];
-        allResponses.push(new SurveyResponse(row, headers));
+        allResponses.push(new SurveyResponse(row, headers, category_suffix));
     }
 }
 
@@ -2701,9 +2756,12 @@ function responsesToJSON() {
         let responseObject = {};
         for (let j in headers) {
             let header = headers[j];
-            let category = header + "-catgorized";
-            responseObject[header] = response.getResponseValue(header);
-            responseObject[category] = response.getCategorizedValue(header);
+            let split = header.split(category_suffix);
+            if (split.length == 1) {
+                let category = header + category_suffix;
+                responseObject[header] = response.getResponseValue(header);
+                responseObject[category] = response.getCategorizedValue(header);
+            }
         }
         responses[i] = responseObject;
     }
@@ -2893,12 +2951,12 @@ class ResponseCategory {
         this.__childCategories[category.name] = null;
     }
 
-    setChildResponseType(responseType) {
-        if (responseType.getParent() != null) {
-            responseType.getParent().removeChildResponseType(responseType);
+    setChildResponseType(foo) {
+        if (foo.getParent() != null) {
+            foo.getParent().removeChildResponseType(foo);
         }
-        this.__childResponseTypes[responseType.responseString] = responseType;
-        responseType.setParent(this);
+        this.__childResponseTypes[foo.responseString] = foo;
+        foo.setParent(this);
     }
 
     removeChildResponseType(responseType) {
@@ -2930,11 +2988,16 @@ class ResponseType {
     }
 
     getResponseValue() {
+        let val = "";
+        console.log(this.__parent);
         if (this.__parent == null || this.__parent.placeholder) {
-            return this.responseString;
+            //return this.responseString;
+            val = "Uncategorized";
         } else {
-            return this.__parent.getResponseValue();
+            val = this.__parent.getResponseValue();
         }
+        console.log("Value: " + val);
+        return val;
     }
 
     addResponse(surveyResponse) {

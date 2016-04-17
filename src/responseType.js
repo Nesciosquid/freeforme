@@ -18,11 +18,16 @@ class ResponseType {
     }
 
     getResponseValue(){
+        let val = "";
+        console.log(this.__parent);
         if (this.__parent == null || this.__parent.placeholder){
-            return this.responseString;
+            //return this.responseString;
+            val = "Uncategorized";
         } else {
-            return this.__parent.getResponseValue();
+            val = this.__parent.getResponseValue();
         }
+        console.log("Value: " + val);
+        return val;
     }
 
     addResponse(surveyResponse){
