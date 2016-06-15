@@ -1,12 +1,16 @@
 "use strict";
 
 class ResponseCategory {
-    constructor(name, header, placeholder){
+    constructor(name, header, placeholder, locked){
         this.name = name;
         this.header = header;
         if (placeholder == undefined){
             placeholder = false;
         }
+        if (locked == undefined){
+            locked = false;
+        }
+        this.locked = locked;
         this.placeholder = placeholder;
         this.id = "category_" + header + "_" + this.name;
         this.__responseCount = 0;

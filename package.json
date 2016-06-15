@@ -1,18 +1,20 @@
 {
   "name": "freeforme",
   "devDependencies": {
+    "babel": ">=5.5.5",
+    "babelify": ">=6.1.2",
+    "browserify": ">=10.2.4",
     "dragula": ">=3.6.6",
-  	"papaparse": ">=4.1.2",
     "filesaver.js": ">=0.2.0",
     "mocha": ">=2.2.5",
-    "babel": ">=5.5.5",
-    "browserify": ">=10.2.4",
-    "babelify": ">=6.1.2",
-    "watchify": ">=3.2.2",
-    "should": ">=7.0.2"
+    "papaparse": ">=4.1.2",
+    "react": "^15.1.0",
+    "react-dnd": "^2.1.4",
+    "react-dom": "^15.1.0",
+    "should": ">=7.0.2",
+    "watchify": ">=3.2.2"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "version": "0.1.0",
   "description": "Freeform survey response processing for humans.",
   "main": "3DuFApp.js",

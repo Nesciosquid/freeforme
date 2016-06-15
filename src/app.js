@@ -1,6 +1,5 @@
 "use strict";
 
-
 var Papa = require("papaparse");
 var Dragula = require("dragula");
 var HTMLUtils = require("./htmlUtils.js");
@@ -131,7 +130,7 @@ function createResponseCard(responseType){
 }
 
 function createCategoryDiv(responseCategory){
-    console.log(responseCategory);
+    //console.log(responseCategory);
     let categoryDiv = document.createElement("div");
     let draggingDiv = document.createElement("div");
     HTMLUtils.addClass(categoryDiv, "subcategory");
@@ -293,7 +292,7 @@ function setupCategories(header){
     let categories = responseCategories[header];
     for (let i in categories){
         if (i != "Uncategorized"){
-            console.log("adding category for: " + i);
+            //console.log("adding category for: " + i);
             let responseCategory = categories[i];
             let newCategoryDiv = createCategoryDiv(responseCategory);
             initializeCategoryDiv(newCategoryDiv);
@@ -306,6 +305,8 @@ function setupCategories(header){
 function setupHeader(header){
     let headerDiv = createHeaderDiv(header);
     let uncat = responseCategories[header]["Uncategorized"];
+
+    uncat.locked = true;
     
     let uncatDiv = createCategoryDiv(uncat);
     initializeCategoryDiv(uncatDiv);
@@ -335,6 +336,11 @@ function createDivs(){
             setupHeader(i);
         }
     }
+
+    ReactDOM.render(
+      React.createElement(window.FreeformeApp, {data: responseCategories}),
+      document.getElementById('reactContainer')
+    );
 }
 
 function renameCategory(category, newName){
@@ -426,7 +432,7 @@ function collateResponses(){
 
                 // if the category doesn't exist, add it
                 if (!categories.hasOwnProperty(categoryName)){
-                    console.log("Adding new category for: " + categoryName);
+                    //console.log("Adding new category for: " + categoryName);
                     categories[categoryName] = new ResponseCategory(categoryName, split[0], false);
                 }
 
@@ -447,7 +453,7 @@ function collateResponses(){
             if (split.length == 1){
                 let categories = responseCategories[header];
                 if (!categories.hasOwnProperty("Uncategorized")){
-                    categories["Uncategorized"] = new ResponseCategory("Uncategorized", header)
+                    categories["Uncategorized"] = new ResponseCategory("Uncategorized", header, false, true)
                 } 
                 let uncat = categories["Uncategorized"];
                 let rType = response.getResponseType(header);
@@ -458,8 +464,8 @@ function collateResponses(){
         }
     }
 
-    console.log(responseTypes);
-    console.log(responseCategories);
+    //console.log(responseTypes);
+    //console.log(responseCategories);
 }
 
 function createSurveyResponses(){

@@ -1,17 +1,21 @@
-var Foo = React.createClass({
-  render: function() {
-      return ( 
-        <h1>baz</h1>
-      );
-    }
-  }
-);
+var category_suffix = "-categorized";
 
 var FreeformeApp = React.createClass({
   render: function() {
+    var headers = [];
+    for (let headerKey in this.props.data){
+      let header = this.props.data[headerKey];
+        if (headerKey.split(category_suffix).length == 1){
+                headers.push(
+          <HeaderGroup header={header}
+          headerName={headerKey} 
+          key={headerKey}/>
+        );
+      }
+    };
     return (
       <div>
-        <HeaderGroup headerName="firstHeader"/>
+        {headers}
       </div>
     );
   }
@@ -27,15 +31,24 @@ var HeaderTitle = React.createClass({
 
 var HeaderGroup = React.createClass({
   render: function() {
+    let locked = [];
+    let floating = [];
+
+    for (let categoryKey in this.props.header){
+      let category = this.props.header[categoryKey];
+      let catComponent = <Category category={category} key={category.id}/>
+      category.locked ? locked.push(catComponent) : floating.push(catComponent);
+    }
+
     return (
       <div className="category">
         <HeaderTitle titleText={this.props.headerName}/>
         <div className="row">
           <div className="three columns uncategorized-list">
-            <Category categoryName="uncategorized" locked={true}/>
+            {locked}
           </div>
           <div className="nine columns subcategory-holder">
-            <Category categoryName="somethingElse" locked={false}/>
+            {floating}
           </div>
         </div>
       </div>
@@ -43,32 +56,50 @@ var HeaderGroup = React.createClass({
   }
 }); 
 
-var CardList = React.createClass({
+var ResponseCard = React.createClass({
   render: function() {
     return (
-      <div className="card-list"/>
+      <div className="response-card">
+        <span>{this.props.response.getName()}</span>
+        <span className="count-badge">{this.props.response.getResponseCount()}</span>
+      </div>
     );
   }
-})
+});
+
+var CardList = React.createClass({
+  render: function() {
+    let cards = [];
+    for (let responseKey in this.props.responses){
+      let response = this.props.responses[responseKey];
+      cards.push(<ResponseCard key={response.id} response={response}/>);
+    }
+    return (
+      <div className="card-list">
+        {cards}
+      </div>
+    );
+  }
+});
 
 var Category = React.createClass({
-  getInitialState: function() {
-    return ({
-      count: 0,
-      responses: []
-    });
+  countCategories: function() {
+    return this.props.category.getResponseCount();
   },
+
+  getClassText: function() {
+    let locked = this.props.category.locked;
+    if(locked) return "subcategory locked";
+    else return "subcategory floating";
+  },
+
   render: function() {
-    let classText;
-    if (this.props.locked){
-      classText = "subcategory locked-category";
-    } else {
-      classText = "subcategory floating";
-    }
+    let classText = this.getClassText();
+    let category = this.props.category;
     return(
       <div className={classText}>
-        <CategoryTitle titleText={this.props.categoryName} count={this.state.count} />
-        <CardList />
+        <CategoryTitle titleText={category.name} count={this.countCategories()} />
+        <CardList responses={category.getResponseTypes()}/>
       </div>
     );
   }
@@ -87,7 +118,4 @@ var CategoryTitle = React.createClass({
   }
 });
 
-ReactDOM.render(
-  <FreeformeApp/>,
-  document.getElementById('reactContainer')
-);
+window.FreeformeApp = FreeformeApp;

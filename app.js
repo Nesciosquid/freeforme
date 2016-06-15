@@ -2300,52 +2300,6 @@ module.exports = eventmap;
 },{}],11:[function(require,module,exports){
 "use strict";
 
-class SurveyResponse {
-    constructor(data, headers) {
-        this.responses = {};
-        this.responseTypes = {};
-        this.setupResponses(data, headers);
-    }
-
-    setupResponses(data, headers) {
-        if (headers.length != data.length) {
-            throw new Error("SurveyResponse headers has length " + headers.length + " but data of length " + data.length + ".");
-        } else {
-            for (var i in headers) {
-                var header = headers[i];
-                this.responses[header] = data[i];
-            }
-        }
-    }
-
-    setResponseType(header, responseType) {
-        this.responseTypes[header] = responseType;
-    }
-
-    getResponseValue(header) {
-        if (this.responses.hasOwnProperty(header)) {
-            return this.responses[header];
-        } else throw new Error("SurveyResponse does not have a response for header: " + header);
-    }
-
-    getResponseType(header) {
-        if (this.responseTypes.hasOwnProperty(header)) {
-            return this.responseTypes[header];
-        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
-    }
-
-    getCategorizedValue(header) {
-        if (this.responseTypes.hasOwnProperty(header)) {
-            return this.responseTypes[header].getResponseValue();
-        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
-    }
-}
-
-module.exports = SurveyResponse;
-
-},{}],12:[function(require,module,exports){
-"use strict";
-
 var Papa = require("papaparse");
 var Dragula = require("dragula");
 var HTMLUtils = require("./htmlUtils.js");
@@ -2476,7 +2430,7 @@ function createResponseCard(responseType) {
 }
 
 function createCategoryDiv(responseCategory) {
-    console.log(responseCategory);
+    //console.log(responseCategory);
     let categoryDiv = document.createElement("div");
     let draggingDiv = document.createElement("div");
     HTMLUtils.addClass(categoryDiv, "subcategory");
@@ -2640,7 +2594,7 @@ function setupCategories(header) {
     let categories = responseCategories[header];
     for (let i in categories) {
         if (i != "Uncategorized") {
-            console.log("adding category for: " + i);
+            //console.log("adding category for: " + i);
             let responseCategory = categories[i];
             let newCategoryDiv = createCategoryDiv(responseCategory);
             initializeCategoryDiv(newCategoryDiv);
@@ -2653,6 +2607,8 @@ function setupCategories(header) {
 function setupHeader(header) {
     let headerDiv = createHeaderDiv(header);
     let uncat = responseCategories[header]["Uncategorized"];
+
+    uncat.locked = true;
 
     let uncatDiv = createCategoryDiv(uncat);
     initializeCategoryDiv(uncatDiv);
@@ -2680,6 +2636,8 @@ function createDivs() {
             setupHeader(i);
         }
     }
+
+    ReactDOM.render(React.createElement(window.FreeformeApp, { data: responseCategories }), document.getElementById('reactContainer'));
 }
 
 function renameCategory(category, newName) {
@@ -2772,7 +2730,7 @@ function collateResponses() {
 
                 // if the category doesn't exist, add it
                 if (!categories.hasOwnProperty(categoryName)) {
-                    console.log("Adding new category for: " + categoryName);
+                    //console.log("Adding new category for: " + categoryName);
                     categories[categoryName] = new ResponseCategory(categoryName, split[0], false);
                 }
 
@@ -2793,7 +2751,7 @@ function collateResponses() {
             if (split.length == 1) {
                 let categories = responseCategories[header];
                 if (!categories.hasOwnProperty("Uncategorized")) {
-                    categories["Uncategorized"] = new ResponseCategory("Uncategorized", header);
+                    categories["Uncategorized"] = new ResponseCategory("Uncategorized", header, false, true);
                 }
                 let uncat = categories["Uncategorized"];
                 let rType = response.getResponseType(header);
@@ -2804,8 +2762,8 @@ function collateResponses() {
         }
     }
 
-    console.log(responseTypes);
-    console.log(responseCategories);
+    //console.log(responseTypes);
+    //console.log(responseCategories);
 }
 
 function createSurveyResponses() {
@@ -2892,12 +2850,12 @@ window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;
 window.saveJSON = saveJSON;
 
-},{"./SurveyResponse.js":11,"./examples.js":13,"./htmlUtils.js":14,"./responseCategory.js":15,"./responseType.js":16,"dragula":2,"papaparse":10}],13:[function(require,module,exports){
+},{"./SurveyResponse.js":16,"./examples.js":12,"./htmlUtils.js":13,"./responseCategory.js":14,"./responseType.js":15,"dragula":2,"papaparse":10}],12:[function(require,module,exports){
 var jsonExample1 = '[{"gender":"male","sexual orientation":"gay"},{"gender":"Male","sexual orientation":"gay"},{"gender":"female","sexual orientation":"gay"},{"gender":"Female","sexual orientation":"bisexual"},{"gender":"male ","sexual orientation":"homosexual"},{"gender":"female ","sexual orientation":"queer"},{"gender":"zhe","sexual orientation":"bisexual"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"mlae","sexual orientation":"straight"},{"gender":"genderfluid","sexual orientation":"straight"},{"gender":"","sexual orientation":"gay"},{"gender":"hir","sexual orientation":"a"},{"gender":"f2m","sexual orientation":"straight"},{"gender":"male","sexual orientation":"gay"},{"gender":"Male","sexual orientation":"none"},{"gender":"female","sexual orientation":"lesbian"},{"gender":"Female","sexual orientation":"l"},{"gender":"male ","sexual orientation":"gay"},{"gender":"female ","sexual orientation":"a"},{"gender":"zhe","sexual orientation":"gay"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"mlae","sexual orientation":"straight"},{"gender":"man","sexual orientation":"straight"},{"gender":"","sexual orientation":"homosexual"},{"gender":"xy","sexual orientation":"straight"},{"gender":"Male","sexual orientation":"bisexual"},{"gender":"female","sexual orientation":"straight"},{"gender":"Female","sexual orientation":""},{"gender":"male ","sexual orientation":"bisexual"},{"gender":"female ","sexual orientation":"straight"},{"gender":"zhe","sexual orientation":"lesbian"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"male","sexual orientation":"straight"},{"gender":"Male","sexual orientation":"asexual"},{"gender":"female","sexual orientation":"homosexual"},{"gender":"Female","sexual orientation":"bisexual"},{"gender":"male ","sexual orientation":"asexual"},{"gender":"female ","sexual orientation":"bicurious"},{"gender":"zhe","sexual orientation":"queer"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"male","sexual orientation":"homosexual"},{"gender":"Male","sexual orientation":"queer"},{"gender":"female","sexual orientation":"straight"},{"gender":"Female","sexual orientation":"straight"},{"gender":"male ","sexual orientation":"homosexual"},{"gender":"female ","sexual orientation":"queer"},{"gender":"zhe","sexual orientation":"bisexual"},{"gender":"Woman","sexual orientation":"bisexual"},{"gender":"male","sexual orientation":""},{"gender":"Male","sexual orientation":"queer"},{"gender":"female","sexual orientation":"trans"},{"gender":"Female","sexual orientation":"bicurious"},{"gender":"male ","sexual orientation":"asexual"},{"gender":"female ","sexual orientation":"a"},{"gender":"zhe","sexual orientation":"l"},{"gender":"Woman","sexual orientation":"straight"},{"gender":"male","sexual orientation":"g"},{"gender":"Male","sexual orientation":"g"},{"gender":"female","sexual orientation":"l"},{"gender":"Female","sexual orientation":"l"},{"gender":"male ","sexual orientation":"pansexual"},{"gender":"female ","sexual orientation":"bicurious"},{"gender":"zhe","sexual orientation":"demisexual"},{"gender":"Woman","sexual orientation":"pansexual"},{"gender":"male","sexual orientation":"demisexual"},{"gender":"Male","sexual orientation":"demisexual"},{"gender":"female","sexual orientation":"l"},{"gender":"Female","sexual orientation":"straight"},{"gender":"male ","sexual orientation":"straight"},{"gender":"female ","sexual orientation":"straight"},{"gender":"zhe","sexual orientation":"pansexual"},{"gender":"Woman","sexual orientation":"straight"}]';
 
 module.exports.jsonExample1 = jsonExample1;
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var removeClass = function (el, className) {
   if (el.classList) el.classList.remove(className);else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 };
@@ -2956,16 +2914,20 @@ module.exports.hasClass = hasClass;
 module.exports.removeElement = removeElement;
 module.exports.DnDFileController = DnDFileController;
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 class ResponseCategory {
-    constructor(name, header, placeholder) {
+    constructor(name, header, placeholder, locked) {
         this.name = name;
         this.header = header;
         if (placeholder == undefined) {
             placeholder = false;
         }
+        if (locked == undefined) {
+            locked = false;
+        }
+        this.locked = locked;
         this.placeholder = placeholder;
         this.id = "category_" + header + "_" + this.name;
         this.__responseCount = 0;
@@ -3044,7 +3006,7 @@ class ResponseCategory {
 
 module.exports = ResponseCategory;
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 class ResponseType {
@@ -3101,4 +3063,50 @@ class ResponseType {
 
 module.exports = ResponseType;
 
-},{}]},{},[12]);
+},{}],16:[function(require,module,exports){
+"use strict";
+
+class SurveyResponse {
+    constructor(data, headers) {
+        this.responses = {};
+        this.responseTypes = {};
+        this.setupResponses(data, headers);
+    }
+
+    setupResponses(data, headers) {
+        if (headers.length != data.length) {
+            throw new Error("SurveyResponse headers has length " + headers.length + " but data of length " + data.length + ".");
+        } else {
+            for (var i in headers) {
+                var header = headers[i];
+                this.responses[header] = data[i];
+            }
+        }
+    }
+
+    setResponseType(header, responseType) {
+        this.responseTypes[header] = responseType;
+    }
+
+    getResponseValue(header) {
+        if (this.responses.hasOwnProperty(header)) {
+            return this.responses[header];
+        } else throw new Error("SurveyResponse does not have a response for header: " + header);
+    }
+
+    getResponseType(header) {
+        if (this.responseTypes.hasOwnProperty(header)) {
+            return this.responseTypes[header];
+        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
+    }
+
+    getCategorizedValue(header) {
+        if (this.responseTypes.hasOwnProperty(header)) {
+            return this.responseTypes[header].getResponseValue();
+        } else throw new Error("SurveyResponse does not have a response type for header:" + header);
+    }
+}
+
+module.exports = SurveyResponse;
+
+},{}]},{},[11]);
