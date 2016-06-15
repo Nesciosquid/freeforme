@@ -2588,6 +2588,8 @@ function onDrop(el, target, source, sibling) {
     if (source.getElementsByClassName("response-card").length == 0 && !HTMLUtils.hasClass(source.parentElement, "locked-category")) {
         HTMLUtils.removeElement(source.parentElement);
     }
+
+    updateReact();
 }
 
 function setupCategories(header) {
@@ -2636,8 +2638,6 @@ function createDivs() {
             setupHeader(i);
         }
     }
-
-    ReactDOM.render(React.createElement(window.FreeformeApp, { data: responseCategories }), document.getElementById('reactContainer'));
 }
 
 function renameCategory(category, newName) {
@@ -2840,6 +2840,10 @@ function compressCategories() {
 
 function loadExample() {
     processJSON(Examples.jsonExample1);
+}
+
+function updateReact() {
+    ReactDOM.render(React.createElement(window.FreeformeApp, { data: responseCategories }), document.getElementById('reactContainer'));
 }
 
 //loadExample();

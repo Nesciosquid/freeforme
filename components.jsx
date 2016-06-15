@@ -72,7 +72,9 @@ var CardList = React.createClass({
     let cards = [];
     for (let responseKey in this.props.responses){
       let response = this.props.responses[responseKey];
-      cards.push(<ResponseCard key={response.id} response={response}/>);
+      if (response){
+        cards.push(<ResponseCard key={response.id} response={response}/>);
+      }
     }
     return (
       <div className="card-list">
