@@ -2638,6 +2638,8 @@ function createDivs() {
             setupHeader(i);
         }
     }
+
+    updateReact();
 }
 
 function renameCategory(category, newName) {

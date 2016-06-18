@@ -339,6 +339,7 @@ function createDivs(){
         }
     }
 
+    updateReact();
 
 }
 
