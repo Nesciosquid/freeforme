@@ -24,8 +24,6 @@
   "description": "Freeform survey response processing for humans.",
   "main": "3DuFApp.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register -R spec ./src/test/",
-    "watch_test": "node_modules/.bin/mocha --watch --recursive --compilers js:babel/register -R min ./src/test/",
     "start": "webpack-dev-server --content-base ./",
     "build": "webpack"
   },

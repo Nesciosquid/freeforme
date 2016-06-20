@@ -3327,8 +3327,10 @@
 
 	    for (var categoryKey in this.props.header) {
 	      var category = this.props.header[categoryKey];
-	      var catComponent = React.createElement(Category, { category: category, key: category.id });
-	      category.locked ? locked.push(catComponent) : floating.push(catComponent);
+	      if (category.getResponseCount() > 0) {
+	        var catComponent = React.createElement(Category, { category: category, key: category.id });
+	        category.locked ? locked.push(catComponent) : floating.push(catComponent);
+	      }
 	    }
 
 	    return React.createElement(
