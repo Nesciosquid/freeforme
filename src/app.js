@@ -23,6 +23,8 @@ var headerDivs = {};
 var responseIDsToObjects = {};
 var categoryIDsToObjects = {};
 
+var Components = require('./components.jsx');
+
 var drakes = {};
 
 window.renameCategoryByHeaderAndName = renameCategoryByHeaderAndName;
@@ -545,8 +547,9 @@ function loadExample(){
 }
 
 function updateReact(){
+    console.log('foo');
     ReactDOM.render(
-      React.createElement(window.FreeformeApp, {data: responseCategories}),
+      React.createElement(Components.FreeformeApp, {data: responseCategories}),
       document.getElementById('reactContainer')
     );
 }

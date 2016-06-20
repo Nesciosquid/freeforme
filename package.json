@@ -8,22 +8,26 @@
     "filesaver.js": ">=0.2.0",
     "mocha": ">=2.2.5",
     "papaparse": ">=4.1.2",
+    "should": ">=7.0.2",
+    "watchify": ">=3.2.2",
+    "babel-core": "^5.8.24",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.12.1"
+  },
+  "dependencies": {
     "react": "^15.1.0",
     "react-dnd": "^2.1.4",
     "react-dom": "^15.1.0",
-    "should": ">=7.0.2",
-    "watchify": ">=3.2.2"
-  },
-  "dependencies": {},
+    "webpack-dev-server": "^1.14.0"
+  	},
   "version": "0.1.0",
   "description": "Freeform survey response processing for humans.",
   "main": "3DuFApp.js",
   "scripts": {
-    "compile": "node_modules/.bin/browserify ./src/app.js -t babelify --outfile ./app.js",
     "test": "node_modules/.bin/mocha --recursive --compilers js:babel/register -R spec ./src/test/",
-    "prepublish": "npm run compile",
-    "watch_compile": "node_modules/.bin/watchify ./src/app.js -t babelify -v --outfile ./app.js",
-    "watch_test": "node_modules/.bin/mocha --watch --recursive --compilers js:babel/register -R min ./src/test/"
+    "watch_test": "node_modules/.bin/mocha --watch --recursive --compilers js:babel/register -R min ./src/test/",
+    "start": "webpack-dev-server --content-base ./",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
