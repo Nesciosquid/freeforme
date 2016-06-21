@@ -14,6 +14,7 @@ var allResponses = [];
 var headers = [];
 var responseTypes = {};
 var responseCategories = {};
+
 var data = [];
 
 var drake = Dragula();
@@ -23,7 +24,9 @@ var headerDivs = {};
 var responseIDsToObjects = {};
 var categoryIDsToObjects = {};
 
-var Components = require('./components.jsx');
+var FreeformeApp = require('./components/FreeformeApp.jsx');
+
+var ReactDOM = require('react-dom');
 
 var drakes = {};
 
@@ -547,17 +550,17 @@ function loadExample(){
 }
 
 function updateReact(){
-    console.log('foo');
     ReactDOM.render(
-      React.createElement(Components.FreeformeApp, {data: responseCategories}),
+      React.createElement(FreeformeApp, {data: responseCategories}),
       document.getElementById('reactContainer')
     );
 }
 
-//loadExample();
+window.updateReact = updateReact;
 
 window.listResponseTypes = listResponseTypes;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;
 window.saveJSON = saveJSON;
+window.updateReact = updateReact;

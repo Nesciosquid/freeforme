@@ -4,6 +4,13 @@ var React = require('react');
 
 var category_suffix = "-categorized";
 
+var DragDropContext = require('react-dnd').DragDropContext;
+var HTML5Backend = require('react-dnd-html5-backend');
+
+var ItemTypes = {
+  RESPONSE_CARD: 'responseCard'
+};
+
 var FreeformeApp = React.createClass({
   render: function() {
     var headers = [];
@@ -126,5 +133,6 @@ var CategoryTitle = React.createClass({
   }
 });
 
-module.exports.FreeformeApp = FreeformeApp;
-//window.FreeformeApp = FreeformeApp;
+module.exports.getDraggableApp = data => {
+  return DragDropContext(HTML5Backend)(<FreeformeApp data={data}/>);
+}

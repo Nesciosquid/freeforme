@@ -8,7 +8,8 @@ var config = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loader: 'babel'
+      loader: 'babel',
+      include: path.join(__dirname, 'src')
     }]
   }
 };
