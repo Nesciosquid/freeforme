@@ -20,7 +20,8 @@ function collect(connect, monitor){
 	return {
 		connectDropTarget: connect.dropTarget(),
 		isOver: monitor.isOver(),
-		canDrop: monitor.canDrop()
+		canDrop: monitor.canDrop(),
+		isDragging: monitor.getItem()
 	};
 };
 
@@ -54,6 +55,7 @@ var Category = React.createClass({
   	let canDrop = this.props.canDrop;
     let classText = this.getClassText();
     let category = this.props.category;
+    let isDragging = this.props.isDragging;
 
     let style;
     if (canDrop && isOver){
@@ -63,6 +65,10 @@ var Category = React.createClass({
     } else if (canDrop){
     	style ={
     		border: "1px solid blue"
+    	}
+    } else if (!canDrop && isDragging){
+    	style = {
+    		border: "1px solid red"
     	}
     }
 
