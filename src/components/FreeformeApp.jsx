@@ -1,30 +1,32 @@
-var React = require('react');
-var HeaderGroup = require('./HeaderGroup.jsx');
+const React = require('react');
+const HeaderGroup = require('./HeaderGroup.jsx');
 
-var HTML5Backend = require('react-dnd-html5-backend');
-var DragDropContext = require('react-dnd').DragDropContext;
+const HTML5Backend = require('react-dnd-html5-backend');
+const DragDropContext = require('react-dnd').DragDropContext;
 
-var category_suffix = "-categorized";
+const categorySuffix = '-categorized';
 
-var FreeformeApp = React.createClass({
-  render: function() {
-    var headers = [];
-    for (let headerKey in this.props.data){
+class FreeformeApp extends React.Component {
+  render() {
+    let headers = [];
+    Object.keys(this.props.data).forEach((headerKey) => {
       let header = this.props.data[headerKey];
-        if (headerKey.split(category_suffix).length == 1){
-                headers.push(
-          <HeaderGroup header={header}
-          headerName={headerKey} 
-          key={headerKey}/>
+      if (headerKey.split(categorySuffix).length === 1) {
+        headers.push(
+          <HeaderGroup header={header} headerName={headerKey} key={headerKey} />
         );
       }
-    };
+    });
     return (
       <div>
         {headers}
       </div>
     );
   }
-});
+}
 
-module.exports = DragDropContext(HTML5Backend)(FreeformeApp);
+FreeformeApp.propTypes = {
+  data: React.PropTypes.object,
+};
+
+module.exports = new DragDropContext(HTML5Backend)(FreeformeApp);

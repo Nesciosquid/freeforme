@@ -1,59 +1,36 @@
-var removeClass = function(el, className){
-    if (el.classList) el.classList.remove(className);
-    else el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-}
-
-var addClass = function(el, className){
-    if (el.classList) el.classList.add(className);
-    else el.className += ' ' + className;
-}
-
-var hasClass = function(el, cls) {
-  return el.className && new RegExp("(\\s|^)" + cls + "(\\s|$)").test(el.className);
-}
-
-var removeElement = function(el){
-  el.parentElement.removeChild(el);
-}
-
 // From http://stackoverflow.com/questions/8869403/drag-drop-json-into-chrome
-function DnDFileController(selector, onDropCallback) {
-  var el_ = document.querySelector(selector);
+function setupDnDFileController(selector, onDropCallback) {
+  const el = document.querySelector(selector);
 
-  this.dragenter = function(e) {
+  function dragenter(e) {
     e.stopPropagation();
     e.preventDefault();
-    el_.classList.add('dropping');
-  };
+    el.classList.add('dropping');
+  }
 
-  this.dragover = function(e) {
+  function dragover(e) {
     e.stopPropagation();
     e.preventDefault();
-  };
+  }
 
-  this.dragleave = function(e) {
+  function dragleave(e) {
     e.stopPropagation();
     e.preventDefault();
-    //el_.classList.remove('dropping');
-  };
+    // el_.classList.remove('dropping');
+  }
 
-  this.drop = function(e) {
+  function drop(e) {
     e.stopPropagation();
     e.preventDefault();
 
-    el_.classList.remove('dropping');
+    el.classList.remove('dropping');
 
     onDropCallback(e.dataTransfer.files, e);
-  };
+  }
 
-  el_.addEventListener('dragenter', this.dragenter, false);
-  el_.addEventListener('dragover', this.dragover, false);
-  el_.addEventListener('dragleave', this.dragleave, false);
-  el_.addEventListener('drop', this.drop, false);
-};
-
-module.exports.removeClass = removeClass;
-module.exports.addClass = addClass;
-module.exports.hasClass = hasClass;
-module.exports.removeElement = removeElement;
-module.exports.DnDFileController = DnDFileController;
+  el.addEventListener('dragenter', dragenter, false);
+  el.addEventListener('dragover', dragover, false);
+  el.addEventListener('dragleave', dragleave, false);
+  el.addEventListener('drop', drop, false);
+}
+module.exports.setupDnDFileController = setupDnDFileController;

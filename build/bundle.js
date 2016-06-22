@@ -54,7 +54,7 @@
 	var ResponseCategory = __webpack_require__(16);
 	var Examples = __webpack_require__(17);
 
-	var category_suffix = "-categorized";
+	var categorySuffix = "-categorized";
 
 	var allResponses = [];
 	var headers = [];
@@ -125,7 +125,7 @@
 	    }
 	}
 
-	function createHeaders() {
+	function renameDuplicateHeaders() {
 	    headers = data[0];
 	    for (var i in headers) {
 	        var header = headers[i];
@@ -143,7 +143,7 @@
 	    hideInstructions();
 	    var processed = Papa.parse(csv);
 	    data = processed.data;
-	    createHeaders();
+	    renameDuplicateHeaders();
 	    createSurveyResponses();
 	    collateResponses();
 	    createDivs();
@@ -381,7 +381,7 @@
 
 	function createDivs() {
 	    for (var i in responseTypes) {
-	        var split = i.split(category_suffix);
+	        var split = i.split(categorySuffix);
 	        if (split.length == 1) {
 	            setupHeader(i);
 	        }
@@ -452,7 +452,7 @@
 	        var response = allResponses[i];
 	        for (var j in headers) {
 	            var header = headers[j];
-	            var split = header.split(category_suffix);
+	            var split = header.split(categorySuffix);
 	            var responseValue = response.getResponseValue(header);
 	            var types = responseTypes[header];
 	            if (split.length == 1) {
@@ -497,7 +497,7 @@
 	        for (var j in headers) {
 
 	            var header = headers[j];
-	            var split = header.split(category_suffix);
+	            var split = header.split(categorySuffix);
 	            if (split.length == 1) {
 	                var categories = responseCategories[header];
 	                if (!categories.hasOwnProperty("Uncategorized")) {
@@ -519,7 +519,7 @@
 	function createSurveyResponses() {
 	    for (var i = 1; i < data.length; i++) {
 	        var row = data[i];
-	        allResponses.push(new SurveyResponse(row, headers, category_suffix));
+	        allResponses.push(new SurveyResponse(row, headers, categorySuffix));
 	    }
 	}
 
@@ -541,9 +541,9 @@
 	        var responseObject = {};
 	        for (var j in headers) {
 	            var header = headers[j];
-	            var split = header.split(category_suffix);
+	            var split = header.split(categorySuffix);
 	            if (split.length == 1) {
-	                var category = header + category_suffix;
+	                var category = header + categorySuffix;
 	                responseObject[header] = response.getResponseValue(header);
 	                responseObject[category] = response.getCategorizedValue(header);
 	            }
@@ -3283,7 +3283,7 @@
 
 	var React = __webpack_require__(19);
 
-	var category_suffix = "-categorized";
+	var categorySuffix = "-categorized";
 
 	var FreeformeApp = React.createClass({
 	  displayName: "FreeformeApp",
@@ -3292,7 +3292,7 @@
 	    var headers = [];
 	    for (var headerKey in this.props.data) {
 	      var header = this.props.data[headerKey];
-	      if (headerKey.split(category_suffix).length == 1) {
+	      if (headerKey.split(categorySuffix).length == 1) {
 	        headers.push(React.createElement(HeaderGroup, { header: header,
 	          headerName: headerKey,
 	          key: headerKey }));

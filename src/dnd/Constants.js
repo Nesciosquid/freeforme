@@ -1,3 +1,0 @@
-exports.ItemTypes = {
-  KNIGHT: 'knight'
-};
