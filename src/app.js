@@ -30,11 +30,11 @@ function clear() {
   headers = [];
   responseTypes = {};
   responseCategories = {};
-
   data = [];
 }
 
 function renameDuplicateHeaders() {
+  headers = data[0];
   headers.forEach((headerOne, indexOne) => {
     headers.forEach((headerTwo, indexTwo) => {
       if (headerOne === headerTwo && indexOne !== indexTwo) {
@@ -185,13 +185,13 @@ function setupDragAndDropLoad(selector) {
     const f = files[0];
 
     const reader = new FileReader();
-    reader.onloadend = () => {
+    reader.onloadend = function CSVLoaded() {
       processCSV(this.result);
     };
     try {
       reader.readAsText(f);
     } catch (err) {
-      Error.log('unable to load JSON: ${f}');
+      Error.log(`unable to load JSON: ${f}`);
     }
   });
 }

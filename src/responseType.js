@@ -2,7 +2,7 @@ class ResponseType {
   constructor(responseString, header) {
     this.header = header;
     this.responseString = responseString;
-    this.id = 'type_${this.header}_${this.responseString}';
+    this.id = `type_${this.header}_${this.responseString}`;
     this.responseCount = 0;
     this.parent = null;
   }

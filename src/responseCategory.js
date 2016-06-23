@@ -10,7 +10,7 @@ class ResponseCategory {
     } else this.locked = locked;
     this.locked = locked;
     this.placeholder = placeholder;
-    this.id = 'category_${header}_${this.name}';
+    this.id = `category_${header}_${this.name}`;
     this.responseCount = 0;
     this.parent = null;
     this.childResponseTypes = {};
@@ -19,10 +19,12 @@ class ResponseCategory {
 
   getResponseCount() {
     let sum = 0;
-    this.childResponseTypes.forEach((type) => {
+    Object.keys(this.childResponseTypes).forEach((typeKey) => {
+      const type = this.childResponseTypes[typeKey];
       if (type != null) sum += type.getResponseCount();
     });
-    this.childCategories.forEach((category) => {
+    Object.keys(this.childCategories).forEach((categoryKey) => {
+      const category = this.childCategories[categoryKey];
       if (category != null) sum += category.getResponseCount();
     });
     return sum;

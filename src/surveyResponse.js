@@ -7,8 +7,8 @@ class SurveyResponse {
 
   setupResponses(data, headers) {
     if (headers.length !== data.length) {
-      throw new Error('SurveyResponse headers has length ${headers.length}' +
-      ' but data of length ${data.length}');
+      throw new Error(`SurveyResponse headers has length ${headers.length}` +
+      ` but data of length ${data.length}`);
     } else {
       headers.forEach((header, index) => {
         this.responses[header] = data[index];
@@ -25,7 +25,7 @@ class SurveyResponse {
       return this.responses[header];
     }
     throw new Error(
-      'SurveyResponse has no response for header: ${header})');
+      `SurveyResponse has no response for header: ${header})`);
   }
 
   getResponseType(header) {
@@ -33,7 +33,7 @@ class SurveyResponse {
       return this.responseTypes[header];
     }
     throw new Error(
-      'SurveyResponse has no response type for header: ${header}');
+      `SurveyResponse has no response type for header: ${header}`);
   }
 
   getCategorizedValue(header) {
@@ -41,7 +41,7 @@ class SurveyResponse {
       return this.responseTypes[header].getResponseValue();
     }
     throw new Error(
-      'SurveyResponse does not have a response type for header: ${header}');
+      `SurveyResponse does not have a response type for header: ${header}`);
   }
 }
 
