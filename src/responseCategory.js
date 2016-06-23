@@ -8,13 +8,14 @@ class ResponseCategory {
     if (locked === undefined) {
       this.locked = false;
     } else this.locked = locked;
-    this.locked = locked;
     this.placeholder = placeholder;
     this.id = `category_${header}_${this.name}`;
     this.responseCount = 0;
     this.parent = null;
     this.childResponseTypes = {};
     this.childCategories = {};
+
+    console.log(this.locked);
   }
 
   getResponseCount() {

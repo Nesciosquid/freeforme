@@ -88,7 +88,9 @@ function collateResponses() {
         // if the category doesn't exist, add it
         if (!categories.hasOwnProperty(categoryName)) {
           // console.log("Adding new category for: " + categoryName);
-          categories[categoryName] = new ResponseCategory(categoryName, split[0], false);
+          let locked = false;
+          if (categoryName === 'Uncategorized') locked = true;
+          categories[categoryName] = new ResponseCategory(categoryName, split[0], false, locked);
         }
 
         const category = categories[categoryName];
