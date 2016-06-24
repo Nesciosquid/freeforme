@@ -16,6 +16,9 @@
     "filesaver.js": ">=0.2.0",
     "mocha": ">=2.2.5",
     "papaparse": ">=4.1.2",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-devtools": "^3.3.1",
     "should": ">=7.0.2",
     "watchify": ">=3.2.2",
     "webpack": "^1.12.1"
