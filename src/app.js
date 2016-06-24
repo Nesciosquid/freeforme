@@ -3,9 +3,8 @@ const HTMLUtils = require('./htmlUtils.js');
 const SurveyResponse = require('./surveyResponse.js');
 const ResponseType = require('./responseType.js');
 const ResponseCategory = require('./responseCategory.js');
-const ReduxTest = require('./reduxTest.jsx');
-
 const categorySuffix = '-categorized';
+const reducerTest = require('./reducers/index.js');
 
 let allResponses = [];
 let headers = [];
@@ -202,6 +201,9 @@ function setupDragAndDropLoad(selector) {
 setupDragAndDropLoad('#drop', processCSV);
 setupSaveButton();
 
+window.headers = (() => headers)();
+window.allResponses = allResponses;
+window.responseTypes = responseTypes;
 window.updateReact = updateReact;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;

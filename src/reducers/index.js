@@ -1,14 +1,14 @@
-const counter = (state = 0, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1;
-    case 'DECREMENT':
-      return state - 1;
-    case 'RESET':
-      return 0;
-    default:
-      return state;
-  }
-};
+import { combineReducers } from 'redux';
+import headers from './headers.js';
+import responses from './responses.js';
+import responseCategories from './responseCategories.js';
+import uniqueResponses from './uniqueResponses.js';
 
-module.exports = counter;
+const freeformeData = combineReducers({
+  headers,
+  uniqueResponses,
+  responses,
+  responseCategories,
+});
+
+module.exports = freeformeData;
