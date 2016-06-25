@@ -1,8 +1,9 @@
 import deepFreeze from 'deep-freeze';
 import expect from 'expect';
 import { pureAddArray, pureRemoveArray, pureReplaceArray }
-  from '../pureFunctions.js';
+  from '../functionUtils.js';
 import SurveyResponse from '../surveyResponse.js';
+import * as ActionCreators from './actionCreators.js';
 
 const addResponse = (list, response) => pureAddArray(list, response);
 const removeResponse = (list, response) => pureRemoveArray(list, response);
@@ -25,30 +26,15 @@ const responses = (state = [], action) => {
   }
 };
 
-// action creators
-const addResponseAction = (response) => ({
-  type: 'ADD_RESPONSE',
-  response,
-});
-const removeResponseAction = (response) => ({
-  type: 'REMOVE_RESPONSE',
-  response,
-});
-const changeResponseAction = (oldResponse, newResponse) => ({
-  type: 'CHANGE_RESPONSE',
-  oldResponse,
-  newResponse,
-});
-
 // testing
-
 const testAddResponse = () => {
   const initState = [];
   const response = new SurveyResponse([0, 1], ['foo', 'bar']);
   deepFreeze(initState);
   deepFreeze(response);
   const endState = [response];
-  expect(responses(initState, addResponseAction(response))).toEqual(endState);
+  expect(responses(
+    initState, ActionCreators.addResponse(response))).toEqual(endState);
 };
 
 const testRemoveResponse = () => {
@@ -59,7 +45,8 @@ const testRemoveResponse = () => {
   deepFreeze(responseA);
   deepFreeze(responseB);
   const endState = [responseB];
-  expect(responses(initState, removeResponseAction(responseA))).toEqual(endState);
+  expect(responses(
+    initState, ActionCreators.removeResponse(responseA))).toEqual(endState);
 };
 
 const testChangeResponse = () => {
@@ -70,7 +57,8 @@ const testChangeResponse = () => {
   deepFreeze(responseA);
   deepFreeze(responseB);
   const endState = [responseB];
-  expect(responses(initState, changeResponseAction(responseA, responseB))).toEqual(endState);
+  expect(responses(
+    initState, ActionCreators.changeResponse(responseA, responseB))).toEqual(endState);
 };
 
 testAddResponse();

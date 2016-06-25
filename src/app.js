@@ -1,22 +1,24 @@
 const Papa = require('papaparse');
 const HTMLUtils = require('./htmlUtils.js');
 const SurveyResponse = require('./surveyResponse.js');
-const ResponseType = require('./responseType.js');
-const ResponseCategory = require('./responseCategory.js');
 const categorySuffix = '-categorized';
 const reducerTest = require('./reducers/index.js');
+const ActionCreators = require('./reducers/actionCreators.js');
 
-let allResponses = [];
-let headers = [];
 let responseTypes = {};
 let responseCategories = {};
 
 let data = [];
 
+const defaultCategory = 'Uncategorized';
+
 const FreeformeApp = require('./components/FreeformeApp.jsx');
 
 const ReactDOM = require('react-dom');
 const React = require('react');
+const Redux = require('redux');
+
+const store = Redux.createStore(reducerTest);
 
 function updateReact() {
   ReactDOM.render(
@@ -26,22 +28,29 @@ function updateReact() {
 }
 
 function clear() {
-  allResponses = [];
-  headers = [];
+  store.dispatch(ActionCreators.reset());
   responseTypes = {};
   responseCategories = {};
   data = [];
 }
 
+function addHeadersToStore(headerList) {
+  headerList.forEach(header => {
+    store.dispatch(ActionCreators.addHeader(header));
+  });
+}
+
 function renameDuplicateHeaders() {
-  headers = data[0];
-  headers.forEach((headerOne, indexOne) => {
-    headers.forEach((headerTwo, indexTwo) => {
+  const headerList = data[0];
+  headerList.forEach((headerOne, indexOne) => {
+    headerList.forEach((headerTwo, indexTwo) => {
       if (headerOne === headerTwo && indexOne !== indexTwo) {
-        headers[indexTwo] = headers[indexTwo] + indexTwo;
+        headerList[indexTwo] = headerList[indexTwo] + indexTwo;
       }
     });
   });
+  addHeadersToStore(headerList);
+  return headerList;
 }
 
 function hideInstructions() {
@@ -52,95 +61,103 @@ function createDivs() {
   updateReact();
 }
 
+function isCategoryHeader(header) {
+  const split = header.split(categorySuffix);
+  if (split.length === 1) {
+    return false;
+  }
+  return true;
+}
+
+function getHeader(categoryHeader) {
+  return categoryHeader.split(categorySuffix)[0];
+}
+
+function hasBeenCategorized(header, uniqueResponse) {
+  const state = store.getState();
+  const categories = state.responseCategories[header];
+  let found = false;
+  if (categories === undefined) return found;
+  Object.keys(categories).forEach(categoryKey => {
+    const category = categories[categoryKey];
+    if (category.indexOf(uniqueResponse) >= 0) {
+      found = true;
+    }
+  });
+  return found;
+}
+
 function collateResponses() {
-  headers.forEach(header => {
-    responseTypes[header] = {};
-    responseCategories[header] = {};
-  });
+  const state = store.getState();
+  const headers = state.headers;
+  const responses = state.responses;
 
-  allResponses.forEach(response => {
+  responses.forEach(response => {
     headers.forEach(header => {
-      const split = header.split(categorySuffix);
-      const responseValue = response.getResponseValue(header);
-      let types = responseTypes[header];
-      if (split.length === 1) {
-        if (!types.hasOwnProperty(responseValue)) {
-          types[responseValue] = new ResponseType(responseValue, header);
+      if (!isCategoryHeader(header)) {
+        const uniqueResponse = response.getResponseValue(header);
+        store.dispatch(
+          ActionCreators.incrementUniqueResponse(
+            header, uniqueResponse));
+        if (!hasBeenCategorized(header, uniqueResponse)) {
+          store.dispatch(ActionCreators.addUniqueResponseToCategory(
+            header,
+            uniqueResponse,
+            defaultCategory));
         }
-        const responseType = types[responseValue];
-        responseType.addResponse(response);
-      } else { // this is a category header!
-          // the type is based on the first half of the split, before the suffix
-        const type = response.getResponseValue(split[0]);
-        types = responseTypes[split[0]];
-        // if the type doesn't exist, add it
-        if (!types.hasOwnProperty(type)) {
-          types[type] = new ResponseType(type, split[0]);
-        }
-
-        const responseType = types[type];
-        const categories = responseCategories[split[0]];
-
-        // the name of the category is what's written
-        // in the category header column for the current response
-        const categoryName = responseValue;
-
-        // if the category doesn't exist, add it
-        if (!categories.hasOwnProperty(categoryName)) {
-          // console.log("Adding new category for: " + categoryName);
-          let locked = false;
-          if (categoryName === 'Uncategorized') locked = true;
-          categories[categoryName] = new ResponseCategory(categoryName, split[0], false, locked);
-        }
-
-        const category = categories[categoryName];
-
-        // set the response type to be the child of this category
-        category.setChildResponseType(responseType);
-      }
-    });
-  });
-
-  allResponses.forEach(response => {
-    headers.forEach(header => {
-      const split = header.split(categorySuffix);
-      if (split.length === 1) {
-        const categories = responseCategories[header];
-        if (!categories.hasOwnProperty('Uncategorized')) {
-          categories.Uncategorized = new ResponseCategory('Uncategorized', header, false, true);
-        }
-        const uncat = categories.Uncategorized;
-        const rType = response.getResponseType(header);
-        if (rType.getParent() == null) {
-          uncat.setChildResponseType(rType);
-        }
+      } else { // this is a category header
+        const realHeader = getHeader(header);
+        const categoryName = response.getResponseValue(header);
+        const uniqueResponse = response.getResponseValue(getHeader(realHeader));
+        store.dispatch(
+          ActionCreators.addUniqueResponseToCategory(
+            realHeader,
+            uniqueResponse,
+            categoryName));
       }
     });
   });
 }
 
 function createSurveyResponses() {
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    allResponses.push(new SurveyResponse(row, headers, categorySuffix));
-  }
+  const headers = store.getState().headers;
+  data.slice(1).forEach(row => {
+    const resp = new SurveyResponse(row, headers, categorySuffix);
+    store.dispatch(ActionCreators.addResponse(resp));
+  });
+}
+
+function getResponseCategory(header, uniqueResponse) {
+  const state = store.getState();
+  const categories = state.responseCategories[header];
+  let cat;
+  Object.keys(categories).forEach(categoryKey => {
+    const category = categories[categoryKey];
+    if (category.indexOf(uniqueResponse) >= 0) {
+      cat = categoryKey;
+    }
+  });
+  return cat;
 }
 
 function responsesToJSON() {
-  const responses = [];
-  allResponses.forEach(response => {
+  const state = store.getState();
+  const headers = state.headers;
+  const responses = state.responses;
+  const responseObjects = [];
+  responses.forEach(response => {
     const responseObject = {};
     headers.forEach(header => {
-      const split = header.split(categorySuffix);
-      if (split.length === 1) {
+      if (!isCategoryHeader(header)) {
         const category = header + categorySuffix;
-        responseObject[header] = response.getResponseValue(header);
-        responseObject[category] = response.getCategorizedValue(header);
+        const value = response.getResponseValue(header);
+        responseObject[header] = value;
+        responseObject[category] = getResponseCategory(header, value);
       }
     });
-    responses.push(responseObject);
+    responseObjects.push(responseObject);
   });
-  const json = JSON.stringify(responses);
+  const json = JSON.stringify(responseObjects);
   return json;
 }
 
@@ -151,7 +168,9 @@ function responsesToCSV() {
 }
 
 function saveJSON() {
-  if (allResponses.length > 0) {
+  const state = store.getState();
+  const responses = state.responses;
+  if (responses.length > 0) {
     const json = responsesToJSON();
     const blob = new Blob([json], { type: 'text/plain; charset=utf-8' });
     saveAs(blob, 'output.json'); // TODO: Get this as a library
@@ -159,7 +178,9 @@ function saveJSON() {
 }
 
 function saveCSV() {
-  if (allResponses.length > 0) {
+  const state = store.getState();
+  const responses = state.responses;
+  if (responses.length > 0) {
     const csv = responsesToCSV();
     const blob = new Blob([csv], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, 'output.csv'); // TODO: Get this as a library
@@ -179,6 +200,7 @@ function processCSV(csv) {
   renameDuplicateHeaders();
   createSurveyResponses();
   collateResponses();
+  console.log(store.getState());
   createDivs();
 }
 
@@ -201,8 +223,6 @@ function setupDragAndDropLoad(selector) {
 setupDragAndDropLoad('#drop', processCSV);
 setupSaveButton();
 
-window.headers = (() => headers)();
-window.allResponses = allResponses;
 window.responseTypes = responseTypes;
 window.updateReact = updateReact;
 window.responsesToJSON = responsesToJSON;

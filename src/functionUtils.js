@@ -40,3 +40,15 @@ export const pureRemoveObject = (object, key) => {
 
 export const pureReplaceObject = (object, key, value) =>
   pureAddObject(object, key, value);
+
+export const getElementOrEmptyObject = (object, header) => {
+  if (object.hasOwnProperty(header)) { // header exists
+    return object[header];
+  } return {};
+};
+
+export const getElementOrEmptyArray = (object, header) => {
+  if (object.hasOwnProperty(header)) { // header exists
+    return object[header];
+  } return [];
+};

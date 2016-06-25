@@ -3,11 +3,11 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const reducer = require('./reducers/index.js');
-/*
+
 const counter = require('./reducers/counter.js');
 const Counter = require('./components/Counter.jsx');
 
-const store = Redux.createStore(counter);
+const store = Redux.createStore(reducer);
 
 const counterRoot = document.getElementById('reduxRoot');
 
@@ -28,4 +28,3 @@ function render() {
 
 store.subscribe(render);
 render();
-*/

@@ -1,15 +1,13 @@
 import deepFreeze from 'deep-freeze';
 import expect from 'expect';
-import { pureAddObject, pureRemoveObject, pureReplaceObject }
-  from '../pureFunctions.js';
+import { getElementOrEmptyObject, pureAddObject, pureReplaceObject }
+  from '../functionUtils.js';
+import * as ActionCreators from './actionCreators.js';
+
 
 const incrementUniqueResponse = (object, header, uniqueResponse) => {
-  let headerGroup;
-  if (object.hasOwnProperty(header)) { // header exists
-    headerGroup = object[header];
-  } else {
-    headerGroup = {};
-  }
+  let headerGroup = getElementOrEmptyObject(object, header);
+
   if (headerGroup.hasOwnProperty(uniqueResponse)) {
     const count = headerGroup[uniqueResponse];
     headerGroup = pureReplaceObject(headerGroup, uniqueResponse, count + 1);
@@ -20,12 +18,7 @@ const incrementUniqueResponse = (object, header, uniqueResponse) => {
 };
 
 const decrementUniqueResponse = (object, header, uniqueResponse) => {
-  let headerGroup;
-  if (object.hasOwnProperty(header)) { // header exists
-    headerGroup = object[header];
-  } else {
-    headerGroup = {};
-  }
+  let headerGroup = getElementOrEmptyObject(object, header);
   if (headerGroup.hasOwnProperty(uniqueResponse)) {
     const count = headerGroup[uniqueResponse];
     if (count > 1) {
@@ -51,18 +44,6 @@ const uniqueResponses = (state = {}, action) => {
   }
 };
 
-// action creators
-const incrementUniqueResponseAction = (header, uniqueResponse) => ({
-  type: 'ADD_UNIQUE_RESPONSE',
-  header,
-  uniqueResponse,
-});
-const decrementUniqueResponseAction = (header, uniqueResponse) => ({
-  type: 'REMOVE_UNIQUE_RESPONSE',
-  header,
-  uniqueResponse,
-});
-
 // testing
 const testIncrement = () => {
   const initState = {};
@@ -74,7 +55,7 @@ const testIncrement = () => {
   endState[header] = {};
   endState[header][uniqueResponse] = 1;
   const result = uniqueResponses(initState,
-    incrementUniqueResponseAction(header, uniqueResponse));
+    ActionCreators.incrementUniqueResponse(header, uniqueResponse));
   expect(result).toEqual(endState);
 };
 
@@ -92,7 +73,7 @@ const testIncrement2 = () => {
   endState[header] = {};
   endState[header][uniqueResponse] = 5;
   const result = uniqueResponses(initState,
-    incrementUniqueResponseAction(header, uniqueResponse));
+    ActionCreators.incrementUniqueResponse(header, uniqueResponse));
   expect(result).toEqual(endState);
 };
 
@@ -119,9 +100,9 @@ const testDecrement = () => {
   endState2[header] = {};
   endState2[header][uniqueResponse] = 0;
   const result1 = uniqueResponses(initState1,
-    decrementUniqueResponseAction(header, uniqueResponse));
+    ActionCreators.decrementUniqueResponse(header, uniqueResponse));
   const result2 = uniqueResponses(initState2,
-    decrementUniqueResponseAction(header, uniqueResponse));
+    ActionCreators.decrementUniqueResponse(header, uniqueResponse));
   expect(result1).toEqual(endState1);
   expect(result2).toEqual(endState2);
 };
