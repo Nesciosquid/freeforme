@@ -6,9 +6,6 @@ const reducerTest = require('./reducers/index.js');
 const ActionCreators = require('./reducers/actionCreators.js');
 const FileSaver = require('file-saver');
 
-let responseTypes = {};
-let responseCategories = {};
-
 let data = [];
 
 const defaultCategory = 'Uncategorized';
@@ -18,20 +15,21 @@ const FreeformeApp = require('./components/FreeformeApp.jsx');
 const ReactDOM = require('react-dom');
 const React = require('react');
 const Redux = require('redux');
+import { Provider } from 'react-redux';
 
 const store = Redux.createStore(reducerTest);
 
 function updateReact() {
   ReactDOM.render(
-    React.createElement(FreeformeApp, { data: responseCategories }),
+    <Provider store={store}>
+      <FreeformeApp />
+    </Provider>,
     document.getElementById('reactContainer')
   );
 }
 
 function clear() {
   store.dispatch(ActionCreators.reset());
-  responseTypes = {};
-  responseCategories = {};
   data = [];
 }
 
@@ -201,7 +199,6 @@ function processCSV(csv) {
   renameDuplicateHeaders();
   createSurveyResponses();
   collateResponses();
-  console.log(store.getState());
   createDivs();
 }
 
@@ -223,8 +220,9 @@ function setupDragAndDropLoad(selector) {
 
 setupDragAndDropLoad('#drop', processCSV);
 setupSaveButton();
+store.subscribe(updateReact);
+updateReact();
 
-window.responseTypes = responseTypes;
 window.updateReact = updateReact;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;

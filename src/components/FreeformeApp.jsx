@@ -4,18 +4,15 @@ const HeaderGroup = require('./HeaderGroup.jsx');
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
 
-const categorySuffix = '-categorized';
-
 class FreeformeApp extends React.Component {
   render() {
+    const { store } = this.context;
+    const categories = store.getState().responseCategories;
     let headers = [];
-    Object.keys(this.props.data).forEach((headerKey) => {
-      let header = this.props.data[headerKey];
-      if (headerKey.split(categorySuffix).length === 1) {
-        headers.push(
-          <HeaderGroup header={header} headerName={headerKey} key={headerKey} />
-        );
-      }
+    Object.keys(categories).forEach((headerKey) => {
+      headers.push(
+        <HeaderGroup header={headerKey} key={headerKey} />
+      );
     });
     return (
       <div>
@@ -24,6 +21,10 @@ class FreeformeApp extends React.Component {
     );
   }
 }
+
+FreeformeApp.contextTypes = {
+  store: React.PropTypes.object,
+};
 
 FreeformeApp.propTypes = {
   data: React.PropTypes.object,

@@ -1,12 +1,26 @@
 const React = require('react');
 const ResponseCard = require('./ResponseCard.jsx');
+import { getUniquesInCategory } from '../storeFunctions.js';
+import * as ActionCreators from '../reducers/actionCreators.js';
 
-const CardList = (props) => {
-  let cards = [];
-  Object.keys(props.responses).forEach((responseKey) => {
-    let response = props.responses[responseKey];
-    if (response) {
-      cards.push(<ResponseCard key={response.id} response={response} />);
+const CardList = ({ category, header }, { store }) => {
+  const cards = [];
+  const uniques = getUniquesInCategory(store, header, category);
+  Object.keys(uniques).forEach((responseKey) => {
+    const onItemDrop = (newCategory) => {
+      store.dispatch(ActionCreators.addUniqueResponseToCategory(header, responseKey, newCategory));
+    };
+    const count = uniques[responseKey];
+    if (count) {
+      cards.push(
+        <ResponseCard
+          key={responseKey}
+          category={category}
+          header={header}
+          onItemDrop={onItemDrop}
+          response={responseKey}
+          count={count}
+        />);
     }
   });
 
@@ -17,8 +31,13 @@ const CardList = (props) => {
   );
 };
 
+CardList.contextTypes = {
+  store: React.PropTypes.object,
+};
+
 CardList.propTypes = {
-  responses: React.PropTypes.object,
+  category: React.PropTypes.string,
+  header: React.PropTypes.string,
 };
 
 module.exports = CardList;

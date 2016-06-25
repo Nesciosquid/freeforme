@@ -14,7 +14,6 @@ export const renameHeader = (oldHeader, newHeader) => ({
 });
 
 // responseCategories
-
 export const addUniqueResponseToCategory = (header, uniqueResponse, categoryName) => ({
   type: 'ADD_UNIQUE_RESPONSE_TO_CATEGORY',
   header,

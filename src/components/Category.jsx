@@ -3,14 +3,14 @@ const CardList = require('./CardList.jsx');
 const Constants = require('./Constants.js');
 const DropTarget = require('react-dnd').DropTarget;
 
+import { getResponseCount } from '../storeFunctions.js';
+
 const categoryTarget = {
   drop: function drop(props, monitor) {
-    props.category.setChildResponseType(monitor.getItem().response);
-    //  TODO: Replace this with an updatestate command?
-    window.updateReact();
+    monitor.getItem().onItemDrop(props.category);
   },
   canDrop: function canDrop(props, monitor) {
-    return monitor.getItem().response.header === props.category.header;
+    return monitor.getItem().header === props.header;
   },
 };
 
@@ -23,14 +23,14 @@ function collect(connect, monitor) {
   };
 }
 
-const CategoryTitle = (props) => (
+const CategoryTitle = ({ titleText, count }) => (
   <div className="category-title-div">
     <h5 className="category-title">
       <span className="category-title-span">
-        {props.titleText}
+        {titleText}
       </span>
       <span className="count-badge">
-        {props.count}
+        {count}
       </span>
     </h5>
   </div>
@@ -41,18 +41,14 @@ CategoryTitle.propTypes = {
   titleText: React.PropTypes.string,
 };
 
-const Category = (props) => {
+const Category = ({ category, locked, header, connectDropTarget,
+   isOver, canDrop, isDragging }, { store }) => {
+  const count = getResponseCount(store, header, category);
   const getClassText = () => {
-    const locked = props.category.locked;
     if (locked) return 'subcategory locked';
     return 'subcategory floating';
   };
-  const connectDropTarget = props.connectDropTarget;
-  const isOver = props.isOver;
-  const canDrop = props.canDrop;
   const classText = getClassText();
-  const category = props.category;
-  const isDragging = props.isDragging;
 
   let style;
   if (canDrop && isOver) {
@@ -72,12 +68,22 @@ const Category = (props) => {
   return connectDropTarget(
     <div style={style} className={classText}>
       <CategoryTitle
-        titleText={category.name}
-        count={category.getResponseCount()}
+        titleText={category}
+        count={count}
       />
-      <CardList responses={category.getResponseTypes()} />
+      <CardList header={header} category={category} />
     </div>
   );
+};
+
+Category.contextTypes = {
+  store: React.PropTypes.object,
+};
+
+Category.propTypes = {
+  category: React.PropTypes.string,
+  locked: React.PropTypes.bool,
+  header: React.PropTypes.string,
 };
 
 module.exports = new DropTarget(
