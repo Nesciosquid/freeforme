@@ -4,6 +4,7 @@ const SurveyResponse = require('./surveyResponse.js');
 const categorySuffix = '-categorized';
 const reducerTest = require('./reducers/index.js');
 const ActionCreators = require('./reducers/actionCreators.js');
+const FileSaver = require('file-saver');
 
 let responseTypes = {};
 let responseCategories = {};
@@ -173,7 +174,7 @@ function saveJSON() {
   if (responses.length > 0) {
     const json = responsesToJSON();
     const blob = new Blob([json], { type: 'text/plain; charset=utf-8' });
-    saveAs(blob, 'output.json'); // TODO: Get this as a library
+    FileSaver.saveAs(blob, 'output.json'); // TODO: Get this as a library
   }
 }
 
@@ -183,7 +184,7 @@ function saveCSV() {
   if (responses.length > 0) {
     const csv = responsesToCSV();
     const blob = new Blob([csv], { type: 'text/plain;charset=utf-8' });
-    saveAs(blob, 'output.csv'); // TODO: Get this as a library
+    FileSaver.saveAs(blob, 'output.csv'); // TODO: Get this as a library
   }
 }
 
