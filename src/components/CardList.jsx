@@ -8,7 +8,8 @@ const CardList = ({ category, header }, { store }) => {
   const uniques = getUniquesInCategory(store, header, category);
   Object.keys(uniques).forEach((responseKey) => {
     const onItemDrop = (newCategory) => {
-      store.dispatch(ActionCreators.addUniqueResponseToCategory(header, responseKey, newCategory));
+      store.dispatch(ActionCreators.addUniqueResponseToCategory(
+        header, responseKey, newCategory));
     };
     const count = uniques[responseKey];
     if (count) {

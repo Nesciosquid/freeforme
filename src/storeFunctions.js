@@ -6,6 +6,7 @@ export const getUniques = (store, header) => (
   store.getState().uniqueResponses[header]
 );
 
+
 export const getCategory = (store, header, categoryName) => (
   getCategories(store, header)[categoryName]
 );

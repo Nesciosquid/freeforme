@@ -56,10 +56,6 @@ function hideInstructions() {
   document.getElementById('instructions').style.display = 'none';
 }
 
-function createDivs() {
-  updateReact();
-}
-
 function isCategoryHeader(header) {
   const split = header.split(categorySuffix);
   if (split.length === 1) {
@@ -116,6 +112,8 @@ function collateResponses() {
       }
     });
   });
+
+  updateReact();
 }
 
 function createSurveyResponses() {
@@ -199,7 +197,7 @@ function processCSV(csv) {
   renameDuplicateHeaders();
   createSurveyResponses();
   collateResponses();
-  createDivs();
+  // createDivs();
 }
 
 function setupDragAndDropLoad(selector) {
@@ -220,10 +218,7 @@ function setupDragAndDropLoad(selector) {
 
 setupDragAndDropLoad('#drop', processCSV);
 setupSaveButton();
-store.subscribe(updateReact);
-updateReact();
 
-window.updateReact = updateReact;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;
