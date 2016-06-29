@@ -6,8 +6,10 @@ const DropTarget = require('react-dnd').DropTarget;
 import { getResponseCount } from '../storeFunctions.js';
 
 const categoryTarget = {
-  drop: function drop(props, monitor) {
-    monitor.getItem().onItemDrop(props.category);
+  drop: function drop(props) {
+    return {
+      targetCategory: props.category,
+    };
   },
   canDrop: function canDrop(props, monitor) {
     return monitor.getItem().header === props.header;
@@ -45,28 +47,20 @@ const Category = ({ category, locked, header, connectDropTarget,
    isOver, canDrop, isDragging }, { store }) => {
   const count = getResponseCount(store, header, category);
   const getClassText = () => {
-    if (locked) return 'subcategory locked';
-    return 'subcategory floating';
+    let classText = 'subcategory ';
+    if (locked) classText += 'locked ';
+    else classText += 'floating ';
+    if (isDragging) {
+      if (!canDrop) classText += 'card-hover-BAD ';
+      else if (isOver) classText += 'card-hover-selected ';
+      else classText += 'card-hover-OK ';
+    }
+    return classText;
   };
   const classText = getClassText();
 
-  let style;
-  if (canDrop && isOver) {
-    style = {
-      border: '1px solid green',
-    };
-  } else if (canDrop) {
-    style = {
-      border: '1px solid blue',
-    };
-  } else if (!canDrop && isDragging) {
-    style = {
-      border: '1px solid red',
-    };
-  }
-
   return connectDropTarget(
-    <div style={style} className={classText}>
+    <div className={classText}>
       <CategoryTitle
         titleText={category}
         count={count}

@@ -7,6 +7,21 @@ a {
   max-width: 80%;
 }
 
+.card-hover-OK {
+  /* nothin' yet */
+}
+
+.card-hover-selected {
+  outline: none;
+  border-radius: 0px;
+  border-color: #9ecaed;
+  box-shadow: 0 0 12px #9ecaed;
+}
+
+.card-hover-BAD {
+  opacity: .2;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -152,9 +167,9 @@ a {
 
 .floating {
   float: left;
-  width: 33.1%;
-  margin-right: 1px;
-  margin-bottom: 1px;
+  width: 30%;
+  margin-right: 5px;
+  margin-bottom: 5px;
   box-sizing: border-box;
 }
 

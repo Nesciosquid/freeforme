@@ -24,7 +24,7 @@ function updateReact() {
     <Provider store={store}>
       <FreeformeApp />
     </Provider>,
-    document.getElementById('reactContainer')
+    document.getElementById('reactRoot')
   );
 }
 
@@ -216,7 +216,7 @@ function setupDragAndDropLoad(selector) {
   });
 }
 
-setupDragAndDropLoad('#drop', processCSV);
+setupDragAndDropLoad('#instructions', processCSV);
 setupSaveButton();
 
 window.responsesToJSON = responsesToJSON;
