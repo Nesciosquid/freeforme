@@ -2,15 +2,10 @@ const React = require('react');
 const Category = require('./Category.jsx');
 const Constants = require('./Constants.js');
 const DropTarget = require('react-dnd').DropTarget;
+
+import { HeaderTitle } from './headerTitle.jsx';
+import { renameHeader } from '../reducers/actionCreators.js';
 import { getResponseCount, getCategories } from '../storeFunctions.js';
-
-const HeaderTitle = (props) => (
-  <h2 className="category-title">{props.titleText}</h2>
-);
-
-HeaderTitle.propTypes = {
-  titleText: React.PropTypes.string,
-};
 
 const headerTarget = {
   drop: (props, monitor) => {
@@ -40,6 +35,10 @@ const HeaderGroup = ({ header, connectDropTarget, isDragging, canDrop, isOver },
   const floating = [];
   const categories = getCategories(store, header);
 
+  const onUpdateTitle = (event) => {
+    store.dispatch(renameHeader(header, event.target.value));
+  };
+
   let className = 'category ';
   if (isDragging) {
     if (canDrop) className += 'card-hover-selected';
@@ -63,7 +62,7 @@ const HeaderGroup = ({ header, connectDropTarget, isDragging, canDrop, isOver },
 
   return connectDropTarget(
     <div className={className}>
-      <HeaderTitle titleText={header} />
+      <HeaderTitle titleText={header} onUpdateTitle={onUpdateTitle} />
       <div className="row">
         <div className="three columns uncategorized-list">
           {locked}

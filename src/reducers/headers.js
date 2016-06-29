@@ -6,8 +6,11 @@ import * as ActionCreators from './actionCreators.js';
 
 const addHeader = (list, header) => pureAddArray(list, header);
 const removeHeader = (list, header) => pureRemoveArray(list, header);
-const renameHeader = (list, oldHeader, newHeader) =>
-  pureReplaceArray(list, oldHeader, newHeader);
+const renameHeader = (list, oldHeader, newHeader) => {
+  console.log(`replacing ${oldHeader} with ${newHeader}`);
+  return pureReplaceArray(list, oldHeader, newHeader);
+};
+
 
 // reducer
 const headers = (state = [], action) => {
