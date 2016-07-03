@@ -3,7 +3,7 @@ const Category = require('./Category.jsx');
 const Constants = require('./Constants.js');
 const DropTarget = require('react-dnd').DropTarget;
 
-import { HeaderTitle } from './headerTitle.jsx';
+import { HeaderTitle } from './HeaderTitle.jsx';
 import { renameHeader } from '../reducers/actionCreators.js';
 import { getResponseCount, getCategories } from '../storeFunctions.js';
 

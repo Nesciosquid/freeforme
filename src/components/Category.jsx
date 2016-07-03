@@ -4,6 +4,7 @@ const Constants = require('./Constants.js');
 const DropTarget = require('react-dnd').DropTarget;
 
 import { getResponseCount } from '../storeFunctions.js';
+import { CategoryTitle } from './presentational/CategoryTitle.jsx';
 
 const categoryTarget = {
   drop: function drop(props) {
@@ -24,24 +25,6 @@ function collect(connect, monitor) {
     isDragging: monitor.getItem(),
   };
 }
-
-const CategoryTitle = ({ titleText, count }) => (
-  <div className="category-title-div">
-    <h5 className="category-title">
-      <span className="category-title-span">
-        {titleText}
-      </span>
-      <span className="count-badge">
-        {count}
-      </span>
-    </h5>
-  </div>
-);
-
-CategoryTitle.propTypes = {
-  count: React.PropTypes.number,
-  titleText: React.PropTypes.string,
-};
 
 const Category = ({ category, locked, header, connectDropTarget,
    isOver, canDrop, isDragging }, { store }) => {

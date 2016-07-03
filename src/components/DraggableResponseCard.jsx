@@ -2,6 +2,8 @@ const React = require('react');
 const Constants = require('./Constants.js');
 const DragSource = require('react-dnd').DragSource;
 
+import { ResponseCard } from './presentational/ResponseCard.jsx';
+
 const responseCardSource = {
   beginDrag: ({ header, response, category }) => (
     {
@@ -25,26 +27,18 @@ const collect = (connect, monitor) => (
   }
 );
 
-const ResponseCard = ({ response, count, connectDragSource }) => {
-  let className = 'response-card';
-
-  return connectDragSource(
-    <div onClick={() => this.setState({ dragging: true })} className={className}>
-      <span>
-        {response}
-      </span>
-      <span className="count-badge">
-        {count}
-      </span>
+const DraggableResponseCard = ({ response, count, connectDragSource }) =>
+  connectDragSource(
+    <div>
+      <ResponseCard response={response} count={count} />
     </div>
   );
-};
 
-ResponseCard.propTypes = {
+DraggableResponseCard.propTypes = {
   response: React.PropTypes.string,
   count: React.PropTypes.number,
   onItemDrop: React.PropTypes.func,
 };
 
 module.exports = new DragSource(Constants.ITEM_TYPES.RESPONSE_CARD,
-   responseCardSource, collect)(ResponseCard);
+   responseCardSource, collect)(DraggableResponseCard);

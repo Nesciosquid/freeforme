@@ -1,5 +1,5 @@
 const React = require('react');
-const ResponseCard = require('./ResponseCard.jsx');
+const DraggableResponseCard = require('./DraggableResponseCard.jsx');
 import { getUniquesInCategory } from '../storeFunctions.js';
 import * as ActionCreators from '../reducers/actionCreators.js';
 
@@ -14,7 +14,7 @@ const CardList = ({ category, header }, { store }) => {
     const count = uniques[responseKey];
     if (count) {
       cards.push(
-        <ResponseCard
+        <DraggableResponseCard
           key={responseKey}
           category={category}
           header={header}

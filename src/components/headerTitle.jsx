@@ -1,5 +1,5 @@
 import React from 'react';
-import { TempInputBox } from './TempInputBox.jsx';
+import { TempInputBox } from './presentational/TempInputBox.jsx';
 
 export class HeaderTitle extends React.Component {
   constructor(props) {
@@ -12,14 +12,14 @@ export class HeaderTitle extends React.Component {
   getContents() {
     if (!this.state.editing) {
       return (
-        <h2 onDoubleClick={this.startEditing} className='category-title'>
+        <h2 onDoubleClick={this.startEditing} className="category-title">
           {this.props.titleText}
         </h2>
       );
     }
     return (
       <TempInputBox
-        childClass='category-title'
+        childClass="category-title"
         value={this.props.titleText}
         onBlur={this.stopEditing}
         onChange={this.props.onUpdateTitle}
