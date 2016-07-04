@@ -145,6 +145,10 @@ a {
   font-size: 2rem;
 }
 
+.category-title {
+  min-height: 30px;
+}
+
 .category-title-div {
   text-align: center;
   padding: 0em;
