@@ -1,7 +1,7 @@
 import React from 'react';
 import DraggableResponseCard from '../DraggableResponseCard.jsx';
 
-const CardList = ({ cards }) => {
+const CardList = ({ cards, header, addUniqueToCategory }) => {
   const cardComponents = [];
   cards.forEach((card) => {
     const response = card[0];
@@ -11,6 +11,8 @@ const CardList = ({ cards }) => {
         key={response}
         response={response}
         count={count}
+        header={header}
+        onItemDrop={addUniqueToCategory}
       />);
   });
 
@@ -22,8 +24,9 @@ const CardList = ({ cards }) => {
 };
 
 CardList.propTypes = {
+  header: React.PropTypes.string,
   cards: React.PropTypes.array,
-  createItemDropHandler: React.PropTypes.func,
+  addUniqueToCategory: React.PropTypes.func,
 };
 
 module.exports = CardList;

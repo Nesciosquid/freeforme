@@ -11,7 +11,8 @@ function countResponses(responses) {
   return sum;
 }
 
-export const HeaderGroup = ({ name, hoverStatus, categories, onUpdateTitle }) => {
+export const HeaderGroup = ({ name, hoverStatus, categories,
+   onUpdateTitle, addUniqueToCategory }) => {
   const locked = [];
   const floating = [];
   let className = 'category ';
@@ -31,10 +32,12 @@ export const HeaderGroup = ({ name, hoverStatus, categories, onUpdateTitle }) =>
     if (catLocked || count > 0) {
       const catComponent = (
         <DraggableCategory
+          header={name}
           locked={catLocked}
           category={categoryKey}
           responses={categoryResponses}
           key={categoryKey}
+          addUniqueToCategory={addUniqueToCategory}
         />
     );
       if (catLocked) locked.push(catComponent);
@@ -62,4 +65,5 @@ HeaderGroup.propTypes = {
   onUpdateTitle: React.PropTypes.func,
   hoverStatus: React.PropTypes.string,
   categories: React.PropTypes.object,
+  addUniqueToCategory: React.PropTypes.func,
 };

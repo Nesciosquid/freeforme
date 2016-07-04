@@ -3,12 +3,16 @@ const DraggableHeaderGroup = require('./DraggableHeaderGroup.jsx');
 
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
+import { addUniqueResponseToCategory } from '../reducers/actionCreators.js';
 
 class FreeformeApp extends React.Component {
   render() {
-    const { store } = this.context;
+    const store = this.props.store;
     const categories = store.getState().responseCategories;
     const uniques = store.getState().uniqueResponses;
+    const addUniqueToCategory = (header, unique, category) => {
+      store.dispatch(addUniqueResponseToCategory(header, unique, category));
+    };
     let headers = [];
     Object.keys(categories).forEach((headerKey) => {
       const headerCategories = categories[headerKey];
@@ -19,6 +23,7 @@ class FreeformeApp extends React.Component {
           key={headerKey}
           categories={headerCategories}
           uniques={headerUniques}
+          addUniqueToCategory={addUniqueToCategory}
         />
       );
     });
@@ -30,12 +35,9 @@ class FreeformeApp extends React.Component {
   }
 }
 
-FreeformeApp.contextTypes = {
-  store: React.PropTypes.object,
-};
-
 FreeformeApp.propTypes = {
   data: React.PropTypes.object,
+  store: React.PropTypes.object,
 };
 
 module.exports = new DragDropContext(HTML5Backend)(FreeformeApp);

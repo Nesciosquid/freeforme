@@ -15,15 +15,11 @@ const FreeformeApp = require('./components/FreeformeApp.jsx');
 const ReactDOM = require('react-dom');
 const React = require('react');
 const Redux = require('redux');
-import { Provider } from 'react-redux';
 
 const store = Redux.createStore(reducerTest);
 
 function updateReact() {
-  ReactDOM.render(
-    <Provider store={store}>
-      <FreeformeApp />
-    </Provider>,
+  ReactDOM.render(<FreeformeApp store={store} />,
     document.getElementById('reactRoot')
   );
 }

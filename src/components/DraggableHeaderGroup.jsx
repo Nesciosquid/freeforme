@@ -44,7 +44,7 @@ function assignUniquesToCategories(uniques, categories) {
 }
 
 const DraggableHeaderGroup = ({ header, categories, uniques,
-  connectDropTarget, isDragging, canDrop }) => {
+  connectDropTarget, isDragging, canDrop, addUniqueToCategory }) => {
   let hoverStatus = 'none';
   if (isDragging) {
     if (canDrop) {
@@ -63,16 +63,14 @@ const DraggableHeaderGroup = ({ header, categories, uniques,
         hoverStatus={hoverStatus}
         categories={newCategories}
         onUpdateTitle={onUpdateTitle}
+        addUniqueToCategory={addUniqueToCategory}
       />
     </div>
   );
 };
 
-DraggableHeaderGroup.childContextTypes = {
-  header: React.PropTypes.string,
-};
-
 DraggableHeaderGroup.propTypes = {
+  addUniqueToCategory: React.PropTypes.func,
   header: React.PropTypes.string,
   categories: React.PropTypes.object,
   uniques: React.PropTypes.object,

@@ -5,16 +5,17 @@ const DragSource = require('react-dnd').DragSource;
 import { ResponseCard } from './presentational/ResponseCard.jsx';
 
 const responseCardSource = {
-  beginDrag: ({ response, category }) => (
+  beginDrag: ({ response, category, header }) => (
     {
       response,
       category,
+      header,
     }
   ),
   endDrag: (props, monitor) => {
     if (monitor.didDrop()) {
       const dropResult = monitor.getDropResult();
-      props.onItemDrop(dropResult.targetCategory);
+      props.onItemDrop(props.header, props.response, dropResult.targetCategory);
     }
   },
 };
