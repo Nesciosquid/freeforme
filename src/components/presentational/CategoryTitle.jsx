@@ -33,9 +33,11 @@ export class CategoryTitle extends React.Component {
   }
 
   startEditing() {
-    this.setState({
-      editing: true,
-    });
+    if (this.props.titleText !== 'Uncategorized') {
+      this.setState({
+        editing: true,
+      });
+    }
   }
 
   stopEditing(event) {
