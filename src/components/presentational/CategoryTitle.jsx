@@ -24,7 +24,7 @@ export class CategoryTitle extends React.Component {
     }
     return (
       <TempInputBox
-        childClass="category-title"
+        childClass="category-title-input-box"
         value={this.props.titleText}
         onBlur={this.stopEditing}
         onEnter={this.stopEditing}
@@ -33,7 +33,7 @@ export class CategoryTitle extends React.Component {
   }
 
   startEditing() {
-    if (this.props.titleText !== 'Uncategorized') {
+    if (!this.props.locked) {
       this.setState({
         editing: true,
       });
@@ -62,4 +62,5 @@ CategoryTitle.propTypes = {
   count: React.PropTypes.number,
   titleText: React.PropTypes.string,
   onUpdateTitle: React.PropTypes.func,
+  locked: React.PropTypes.bool,
 };

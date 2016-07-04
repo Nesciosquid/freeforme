@@ -2,18 +2,17 @@ import React from 'react';
 
 export const TempInputBox = ({ childClass, style, value,
    onChange, onBlur, onEnter }) => (
-  <div className={childClass}>
-    <input
-      autoFocus
-      style={style}
-      defaultValue={value}
-      onChange={onChange}
-      onBlur={onBlur}
-      onKeyDown={(event) => {
-        if (event.which === 13) onEnter(event);
-      }}
-    />
-  </div>
+  <input
+    className={childClass}
+    autoFocus
+    style={style}
+    defaultValue={value}
+    onChange={onChange}
+    onBlur={onBlur}
+    onKeyDown={(event) => {
+      if (event.which === 13) onEnter(event);
+    }}
+  />
 );
 
 TempInputBox.propTypes = {

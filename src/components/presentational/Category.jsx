@@ -31,6 +31,7 @@ export const Category = ({ name, count, header, renameCategory,
         onUpdateTitle={(event) => {
           renameCategory(header, name, event.target.value);
         }}
+        locked={locked}
       />
       <CardList
         cards={responses}
