@@ -17544,6 +17544,7 @@
 	        header: name,
 	        locked: catLocked,
 	        category: categoryKey,
+	        count: count,
 	        responses: categoryResponses,
 	        key: categoryKey,
 	        addUniqueToCategory: addUniqueToCategory,
@@ -17633,7 +17634,7 @@
 	        );
 	      }
 	      return _react2['default'].createElement(_TempInputBoxJsx.TempInputBox, {
-	        childClass: 'category-title',
+	        childClass: 'header-div-title',
 	        value: this.props.titleText,
 	        onBlur: this.stopEditing,
 	        onChange: this.props.onUpdateTitle
