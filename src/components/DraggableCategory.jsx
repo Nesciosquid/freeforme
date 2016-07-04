@@ -35,7 +35,8 @@ function computeHoverStatus(isDragging, isOver, canDrop) {
 }
 
 const DraggableCategory = ({ category, header, locked, connectDropTarget,
-   isOver, canDrop, isDragging, responses, count, addUniqueToCategory }) => {
+   isOver, canDrop, isDragging, responses, count, addUniqueToCategory,
+    renameCategory }) => {
   let hoverStatus = computeHoverStatus(isDragging, isOver, canDrop);
   return connectDropTarget(
     <div>
@@ -47,6 +48,7 @@ const DraggableCategory = ({ category, header, locked, connectDropTarget,
         locked={locked}
         responses={responses}
         addUniqueToCategory={addUniqueToCategory}
+        renameCategory={renameCategory}
       />
     </div>
   );
@@ -57,6 +59,7 @@ DraggableCategory.propTypes = {
   locked: React.PropTypes.bool,
   header: React.PropTypes.string,
   addUniqueToCategory: React.PropTypes.func,
+  renameCategory: React.PropTypes.func,
 };
 
 module.exports = new DropTarget(

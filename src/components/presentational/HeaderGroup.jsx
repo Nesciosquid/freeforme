@@ -12,7 +12,7 @@ function countResponses(responses) {
 }
 
 export const HeaderGroup = ({ name, hoverStatus, categories,
-   onUpdateTitle, addUniqueToCategory }) => {
+   onUpdateTitle, addUniqueToCategory, renameCategory }) => {
   const locked = [];
   const floating = [];
   let className = 'category ';
@@ -38,6 +38,7 @@ export const HeaderGroup = ({ name, hoverStatus, categories,
           responses={categoryResponses}
           key={categoryKey}
           addUniqueToCategory={addUniqueToCategory}
+          renameCategory={renameCategory}
         />
     );
       if (catLocked) locked.push(catComponent);
@@ -66,4 +67,5 @@ HeaderGroup.propTypes = {
   hoverStatus: React.PropTypes.string,
   categories: React.PropTypes.object,
   addUniqueToCategory: React.PropTypes.func,
+  renameCategory: React.PropTypes.func,
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 
-export const TempInputBox = ({ childClass, style, value, onChange, onBlur }) => (
+export const TempInputBox = ({ childClass, style, value,
+   onChange, onBlur, onEnter }) => (
   <div className={childClass}>
     <input
       autoFocus
@@ -8,6 +9,9 @@ export const TempInputBox = ({ childClass, style, value, onChange, onBlur }) => 
       defaultValue={value}
       onChange={onChange}
       onBlur={onBlur}
+      onKeyDown={(event) => {
+        if (event.which === 13) onEnter(event);
+      }}
     />
   </div>
 );
@@ -16,6 +20,7 @@ TempInputBox.propTypes = {
   value: React.PropTypes.string,
   onChange: React.PropTypes.func,
   onBlur: React.PropTypes.func,
+  onEnter: React.PropTypes.func,
   style: React.PropTypes.object,
   childClass: React.PropTypes.string,
 };

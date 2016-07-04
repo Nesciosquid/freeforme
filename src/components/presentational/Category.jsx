@@ -3,7 +3,7 @@ const CardList = require('./CardList.jsx');
 
 import { CategoryTitle } from './CategoryTitle.jsx';
 
-export const Category = ({ name, count, header,
+export const Category = ({ name, count, header, renameCategory,
   locked, hoverStatus, responses, addUniqueToCategory }) => {
   let classText = 'subcategory ';
   if (locked) classText += 'locked ';
@@ -28,6 +28,9 @@ export const Category = ({ name, count, header,
       <CategoryTitle
         titleText={name}
         count={count}
+        onUpdateTitle={(event) => {
+          renameCategory(header, name, event.target.value);
+        }}
       />
       <CardList
         cards={responses}
@@ -46,4 +49,5 @@ Category.propTypes = {
   hoverStatus: React.PropTypes.string,
   responses: React.PropTypes.array,
   addUniqueToCategory: React.PropTypes.func,
+  renameCategory: React.PropTypes.func,
 };

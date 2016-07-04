@@ -43,7 +43,7 @@ function assignUniquesToCategories(uniques, categories) {
   return newCategories;
 }
 
-const DraggableHeaderGroup = ({ header, categories, uniques,
+const DraggableHeaderGroup = ({ header, categories, uniques, renameCategory,
   connectDropTarget, isDragging, canDrop, addUniqueToCategory }) => {
   let hoverStatus = 'none';
   if (isDragging) {
@@ -64,6 +64,7 @@ const DraggableHeaderGroup = ({ header, categories, uniques,
         categories={newCategories}
         onUpdateTitle={onUpdateTitle}
         addUniqueToCategory={addUniqueToCategory}
+        renameCategory={renameCategory}
       />
     </div>
   );
@@ -74,6 +75,7 @@ DraggableHeaderGroup.propTypes = {
   header: React.PropTypes.string,
   categories: React.PropTypes.object,
   uniques: React.PropTypes.object,
+  renameCategory: React.PropTypes.func,
 };
 
 module.exports = new DropTarget(Constants.ITEM_TYPES.RESPONSE_CARD,
