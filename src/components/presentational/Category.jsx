@@ -3,8 +3,7 @@ const CardList = require('./CardList.jsx');
 
 import { CategoryTitle } from './CategoryTitle.jsx';
 
-export const Category = ({ name, count, locked,
-   hoverStatus, responses, createItemDropHandler }) => {
+export const Category = ({ name, count, locked, hoverStatus, responses }) => {
   let classText = 'subcategory ';
   if (locked) classText += 'locked ';
   else classText += 'floating ';
@@ -31,21 +30,15 @@ export const Category = ({ name, count, locked,
       />
       <CardList
         cards={responses}
-        createItemDropHandler={createItemDropHandler}
       />
     </div>
   );
 };
 
-Category.contextTypes = {
-  store: React.PropTypes.object,
-};
-
 Category.propTypes = {
   name: React.PropTypes.string,
-  count: React.PropTypes.bool,
-  locked: React.PropTypes.string,
+  count: React.PropTypes.number,
+  locked: React.PropTypes.bool,
   hoverStatus: React.PropTypes.string,
   responses: React.PropTypes.array,
-  createItemDropHandler: React.PropTypes.func,
 };

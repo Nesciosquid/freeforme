@@ -1,16 +1,16 @@
-const React = require('react');
-const ResponseCard = require('./ResponseCard.jsx');
+import React from 'react';
+import DraggableResponseCard from '../DraggableResponseCard.jsx';
 
-const CardList = ({ cards, createItemDropHandler }) => {
+const CardList = ({ cards }) => {
   const cardComponents = [];
   cards.forEach((card) => {
     const response = card[0];
     const count = card[1];
     cardComponents.push(
-      <ResponseCard
+      <DraggableResponseCard
         key={response}
+        response={response}
         count={count}
-        onDrop={createItemDropHandler(response)}
       />);
   });
 

@@ -1,5 +1,5 @@
 const React = require('react');
-const HeaderGroup = require('./HeaderGroup.jsx');
+const DraggableHeaderGroup = require('./DraggableHeaderGroup.jsx');
 
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
@@ -8,10 +8,18 @@ class FreeformeApp extends React.Component {
   render() {
     const { store } = this.context;
     const categories = store.getState().responseCategories;
+    const uniques = store.getState().uniqueResponses;
     let headers = [];
     Object.keys(categories).forEach((headerKey) => {
+      const headerCategories = categories[headerKey];
+      const headerUniques = uniques[headerKey];
       headers.push(
-        <HeaderGroup header={headerKey} key={headerKey} />
+        <DraggableHeaderGroup
+          header={headerKey}
+          key={headerKey}
+          categories={headerCategories}
+          uniques={headerUniques}
+        />
       );
     });
     return (

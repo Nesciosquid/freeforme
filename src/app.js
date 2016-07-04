@@ -112,8 +112,6 @@ function collateResponses() {
       }
     });
   });
-
-  updateReact();
 }
 
 function createSurveyResponses() {
@@ -198,6 +196,8 @@ function processCSV(csv) {
   createSurveyResponses();
   collateResponses();
   // createDivs();
+  updateReact();
+  store.subscribe(updateReact);
 }
 
 function setupDragAndDropLoad(selector) {
@@ -219,6 +219,7 @@ function setupDragAndDropLoad(selector) {
 setupDragAndDropLoad('#instructions', processCSV);
 setupSaveButton();
 
+window.store = store;
 window.responsesToJSON = responsesToJSON;
 window.responsesToCSV = responsesToCSV;
 window.saveCSV = saveCSV;

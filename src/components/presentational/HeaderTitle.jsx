@@ -1,5 +1,5 @@
 import React from 'react';
-import { TempInputBox } from './presentational/TempInputBox.jsx';
+import { TempInputBox } from './TempInputBox.jsx';
 
 export class HeaderTitle extends React.Component {
   constructor(props) {

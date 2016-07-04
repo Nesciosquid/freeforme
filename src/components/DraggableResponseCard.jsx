@@ -5,10 +5,9 @@ const DragSource = require('react-dnd').DragSource;
 import { ResponseCard } from './presentational/ResponseCard.jsx';
 
 const responseCardSource = {
-  beginDrag: ({ header, response, category }) => (
+  beginDrag: ({ response, category }) => (
     {
       response,
-      header,
       category,
     }
   ),
