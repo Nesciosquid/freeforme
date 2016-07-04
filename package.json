@@ -38,7 +38,8 @@
   "main": "3DuFApp.js",
   "scripts": {
     "start": "webpack-dev-server --content-base ./",
-    "build": "webpack"
+    "build": "webpack",
+    "sync": "npm build & git push origin +gh-pages"
   },
   "repository": {
     "type": "git",
