@@ -1,86 +1,81 @@
-"use strict";
-
 class ResponseCategory {
-    constructor(name, header, placeholder){
-        this.name = name;
-        this.header = header;
-        if (placeholder == undefined){
-            placeholder = false;
-        }
-        this.placeholder = placeholder;
-        this.id = "category_" + header + "_" + this.name;
-        this.__responseCount = 0;
-        this.__parent = null;
-        this.__childResponseTypes = {};
-        this.__childCategories = {};
-    }
+  constructor(name, header, placeholder, locked) {
+    this.name = name;
+    this.header = header;
+    if (placeholder === undefined) {
+      this.placeholder = false;
+    } else this.placeholder = placeholder;
+    if (locked === undefined) {
+      this.locked = false;
+    } else this.locked = locked;
+    this.placeholder = placeholder;
+    this.id = `category_${header}_${this.name}`;
+    this.responseCount = 0;
+    this.parent = null;
+    this.childResponseTypes = {};
+    this.childCategories = {};
 
-    getResponseCount(){
-        let sum = 0;
-        for (let i in this.__childResponseTypes){
-            let type = this.__childResponseTypes[i];
-            if (type != null){
-                sum += type.getResponseCount();
-            }
-        }
+    console.log(this.locked);
+  }
 
-        for (let i in this.__childCategories){
-            let category = this.__childCategories[i];
-            if (category != null){
-                sum += category.getResponseCount();
-            }
-        }
-        return sum;
-    }
+  getResponseCount() {
+    let sum = 0;
+    Object.keys(this.childResponseTypes).forEach((typeKey) => {
+      const type = this.childResponseTypes[typeKey];
+      if (type != null) sum += type.getResponseCount();
+    });
+    Object.keys(this.childCategories).forEach((categoryKey) => {
+      const category = this.childCategories[categoryKey];
+      if (category != null) sum += category.getResponseCount();
+    });
+    return sum;
+  }
 
-    getResponseValue(){
-        if (this.__parent == null){
-            return this.name;
-        } else {
-            return this.__parent.getResponseValue();
-        }
-    }
+  getResponseValue() {
+    if (this.parent === null) return this.name;
+    return this.parent.getResponseValue();
+  }
 
-    removeParent(){
-        this.__parent = null;
-    }
+  removeParent() {
+    this.parent = null;
+  }
 
-    setParent(category){
-        this.__parent = category;
-    }
+  setParent(category) {
+    this.parent = category;
+  }
 
-    getParent(category){
-        return this.__parent;
-    }
+  getParent() {
+    return this.parent;
+  }
 
-    getResponseTypes(){
-        return this.__childResponseTypes;
-    }
+  getResponseTypes() {
+    return this.childResponseTypes;
+  }
 
-    getChildCategories(){
-        return this.__childCategories;
-    }
+  getChildCategories() {
+    return this.childCategories;
+  }
 
-    setChildCategory(category){
-        this.__childCategories[category.name] = category;
-    }
+  setChildCategory(category) {
+    this.childCategories[category.name] = category;
+  }
 
-    removeChildCategory(category){
-        this.__childCategories[category.name] = null;
-    }
+  removeChildCategory(category) {
+    this.childCategories[category.name] = null;
+  }
 
-    setChildResponseType(foo){
-        if (foo.getParent() != null){
-            foo.getParent().removeChildResponseType(foo);
-        }
-        this.__childResponseTypes[foo.responseString] = foo;
-        foo.setParent(this);
+  setChildResponseType(foo) {
+    if (foo.getParent() != null) {
+      foo.getParent().removeChildResponseType(foo);
     }
+    this.childResponseTypes[foo.responseString] = foo;
+    foo.setParent(this);
+  }
 
-    removeChildResponseType(responseType){
-        this.__childResponseTypes[responseType.responseString] = null;
-        responseType.removeParent();
-    }
+  removeChildResponseType(responseType) {
+    this.childResponseTypes[responseType.responseString] = null;
+    responseType.removeParent();
+  }
 }
 
 module.exports = ResponseCategory;

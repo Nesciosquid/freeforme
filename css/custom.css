@@ -1,18 +1,152 @@
+a {
+  color: #3F8FB2;
+  text-decoration: none;
+}
+
+.category-title-input-box {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  width: 100%;
+}
+
+.card-hover-OK {
+  /* nothin' yet */
+}
+
+.card-hover-selected {
+  outline: none;
+  border-radius: 0px;
+  border-color: #9ecaed;
+  box-shadow: 0 0 12px #9ecaed;
+}
+
+.card-hover-BAD {
+  opacity: .2;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+
+}
+.top-bar {
+  padding: 10px 0;
+  text-align: left;
+  display: block;
+  margin-bottom: 50px;
+}
+
+.page-title {
+  color: #3F8FB2;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 32px;
+  margin-bottom: 0;
+}
+.toolbar {
+  text-align: right;
+}
+.toolbar button {
+  margin-bottom: 0;
+  border-color: #3F8FB2;
+  color: #3F8FB2;
+}
+.toolbar button.disabled {
+  cursor: default;
+  color: #DDD;
+  border-color: #DDD;
+}
+
+.instructions {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+}
+.instructions li {
+  font-size: 3rem;
+}
+.instructions p {
+  margin-top: 100px;
+  margin-bottom: 0;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #999;
+}
+.instructions svg {
+  height: 200px;
+  width: 200px;
+  margin-left: -40px;
+  margin-bottom: 2rem;
+}
+.csv-plus {
+    position: relative;
+    top: -104px;
+    left: 95px;
+    font-size: 320px;
+    color: #3F8FB2;
+    display: block;
+    line-height: 0;
+    margin-bottom: 20px;
+}
+#lists > .category + .category {
+  margin-top: 5rem;
+}
 .count-badge {
   float: right;
-  padding: 1px 9px 2px;
-  font-size: 12.025px;
-  font-weight: bold;
+  font-size: 1rem;
   white-space: nowrap;
-  color: #ffffff;
-  background-color: #999999;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 9px;
+  color: #555;
+}
+.category-title .count-badge {
+  line-height: 3rem;
+  font-size: 2rem;
+
+}
+
+.card-list .count-badge {
+  border-left: 1px solid #DDD;
+  background: #FAFAFA;
+  line-height: 1rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-div-title {
+  font-size: 24px;
+  text-align: center;
+}
+
+.header-container {
+  margin-bottom: 10px;
+}
+
+.header-container:nth-of-type(2n) {
+  background-color: #FAFAFA;
 }
 
 .category-title {
   text-align: center;
+  text-transform: capitalize;
+  margin-bottom: 3rem;
+  margin-top: 1rem;
+}
+.subcategory .category-title {
+  text-align: left;
+  padding: 10px;
+  background-color: #FAFAFA;
+  margin-bottom: 1;
+  font-size: 2rem;
+}
+
+.category-title {
+  min-height: 30px;
 }
 
 .category-title-div {
@@ -22,12 +156,15 @@
 }
 
 .blank-category{
-  background: #FFFFFF;
-  border: 2px dashed #DDDDDD;
+  .min-height: 33px;
 }
 
 .blank-category .card-list {
-  background-color: #F0F0F0;
+  background-color: #EEE;
+}
+
+.blank-category .category-title {
+  color: #E0E0E0;
 }
 
 .header-container {
@@ -35,11 +172,12 @@
   overflow: hidden; /* add this to contain floated children */
 }
 
-.category {
-  float:left; /* add this */
-  min-width: 200px;
-  margin: 5px;
-  padding: 5px;
+.floating {
+  float: left;
+  width: 30%;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  box-sizing: border-box;
 }
 
 .response-type {
@@ -55,22 +193,36 @@
 }
 
 .response-card {
-    margin: 4px;
     background-color: #FFF;
-    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-    padding: 6px 8px;
+    box-shadow: 0 1px 0px 1px #aaa, 0 0 0 1px #AAA;
     min-height: 25px;
+    word-wrap:break-word;
+    cursor: move;
+    border-radius: 1px;
+}
+.response-card + .response-card {
+  margin: 1px 0 0;
 }
 
+.response-card > span:first-of-type {
+  line-height: 3.5rem;
+  padding-left: 1rem;
+}
 .response-card:hover {
-    background-color: #F0F0F0;
+    background-color: #FAFAFA;
 }
 .card-list {
-  background-color: #E3E3E3;
+  background-color: #F0F0F0;
   border-radius: 3px;
-  margin: 5px 5px;
   padding: 10px;
-  min-height: 200px;
+  min-height: 55px;
+}
+.subcategory-holder .card-list .draggable:last-of-type {
+  margin-bottom: 20px;
+}
+
+.left-category-holder .card-list{
+  background-color: #E3F2FD;
 }
 
 .gu-mirror {

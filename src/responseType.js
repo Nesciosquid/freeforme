@@ -1,55 +1,48 @@
-"use strict";
-
 class ResponseType {
-    constructor(responseString, header){
-        this.header = header;
-        this.responseString = responseString;
-        this.id = "type_" + this.header + "_" + this.responseString;
-        this.__responseCount = 0;
-        this.__parent = null;
-    }
+  constructor(responseString, header) {
+    this.header = header;
+    this.responseString = responseString;
+    this.id = `type_${this.header}_${this.responseString}`;
+    this.responseCount = 0;
+    this.parent = null;
+  }
 
-    getName(){
-        if (this.responseString == ""){
-            return "[NO RESPONSE]";
-        } else {
-            return this.responseString;
-        }
-    }
+  getName() {
+    if (this.responseString === '') return '[NO RESPONSE]';
+    return this.responseString;
+  }
 
-    getResponseValue(){
-        let val = "";
-        console.log(this.__parent);
-        if (this.__parent == null || this.__parent.placeholder){
-            //return this.responseString;
-            val = "Uncategorized";
-        } else {
-            val = this.__parent.getResponseValue();
-        }
-        console.log("Value: " + val);
-        return val;
+  getResponseValue() {
+    let val = '';
+    if (this.parent == null || this.parent.placeholder) {
+      // return this.responseString;
+      val = 'Uncategorized';
+    } else {
+      val = this.parent.getResponseValue();
     }
+    return val;
+  }
 
-    addResponse(surveyResponse){
-      this.__responseCount++;
-      surveyResponse.setResponseType(this.header, this);
-    }
+  addResponse(surveyResponse) {
+    this.responseCount++;
+    surveyResponse.setResponseType(this.header, this);
+  }
 
-    getResponseCount(){
-        return this.__responseCount;
-    }
+  getResponseCount() {
+    return this.responseCount;
+  }
 
-    getParent(){
-        return this.__parent;
-    }
+  getParent() {
+    return this.parent;
+  }
 
-    setParent(responseCategory){
-        this.__parent = responseCategory;
-    }
+  setParent(responseCategory) {
+    this.parent = responseCategory;
+  }
 
-    removeParent(){
-        this.__parent = null;
-    }
+  removeParent() {
+    this.parent = null;
+  }
 }
 
 module.exports = ResponseType;
