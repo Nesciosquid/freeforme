@@ -19,7 +19,7 @@ export class HeaderTitle extends React.Component {
     }
     return (
       <TempInputBox
-        childClass="category-title"
+        childClass="header-div-title"
         value={this.props.titleText}
         onBlur={this.stopEditing}
         onChange={this.props.onUpdateTitle}

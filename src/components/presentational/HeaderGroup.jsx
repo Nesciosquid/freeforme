@@ -35,6 +35,7 @@ export const HeaderGroup = ({ name, hoverStatus, categories,
           header={name}
           locked={catLocked}
           category={categoryKey}
+          count={count}
           responses={categoryResponses}
           key={categoryKey}
           addUniqueToCategory={addUniqueToCategory}
