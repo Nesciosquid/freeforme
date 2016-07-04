@@ -39,7 +39,7 @@
   "scripts": {
     "start": "webpack-dev-server --content-base ./",
     "build": "webpack",
-    "sync": "git checkout gh-pages & git merge master & npm run build & git commit -m "rebuild" & git push origin +gh-pages"
+    "sync": "git checkout gh-pages & git merge master & npm run build & git commit -m 'rebuild' & git push origin +gh-pages"
   },
   "repository": {
     "type": "git",
