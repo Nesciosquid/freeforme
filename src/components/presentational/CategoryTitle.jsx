@@ -13,7 +13,8 @@ export class CategoryTitle extends React.Component {
     if (!this.state.editing) {
       return (
         <div>
-          <span onDoubleClick={this.startEditing} className="category-title-span">
+          {/* TODO: Fix renaming categories <span onDoubleClick={this.startEditing} className="category-title-span"> */}
+          <span className="category-title-span">
             {this.props.titleText}
           </span>
           <span className="count-badge">
