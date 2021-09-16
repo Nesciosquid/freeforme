@@ -11,7 +11,7 @@ const changeResponse = (list, oldResponse, newResponse) =>
   pureReplaceArray(list, oldResponse, newResponse);
 
 // reducer
-const responses = (state = [], action) => {
+export default responses = (state = [], action) => {
   switch (action.type) {
     case 'ADD_RESPONSE':
       return addResponse(state, action.response);
@@ -64,5 +64,3 @@ const testChangeResponse = () => {
 testAddResponse();
 testRemoveResponse();
 testChangeResponse();
-
-module.exports = responses;

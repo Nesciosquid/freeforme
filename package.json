@@ -1,43 +1,48 @@
 {
   "name": "freeforme",
   "devDependencies": {
-    "babel": ">=5.5.5",
-    "babel-core": "^5.8.24",
-    "babel-eslint": "^6.0.5",
-    "babel-loader": "^5.3.2",
     "babelify": ">=6.1.2",
     "browserify": ">=10.2.4",
     "deep-freeze": "0.0.1",
     "dragula": ">=3.6.6",
-    "eslint": "^2.13.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.9.2",
-    "eslint-plugin-jsx-a11y": "^1.5.3",
-    "eslint-plugin-react": "^5.2.2",
     "expect": "^1.20.1",
     "file-saver": "^1.3.2",
     "filesaver.js": ">=0.2.0",
     "mocha": ">=2.2.5",
     "papaparse": ">=4.1.2",
-    "react-redux": "^4.4.5",
-    "redux": "^3.5.2",
-    "redux-devtools": "^3.3.1",
+    "redux-devtools": "^3.7.0",
     "should": ">=7.0.2",
-    "watchify": ">=3.2.2",
-    "webpack": "^1.12.1"
+    "watchify": ">=3.2.2"
   },
   "dependencies": {
-    "react": "^15.1.0",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-react": "^7.14.5",
+    "acorn": "^8.5.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.32.0",
+    "eslint-plugin-airbnb": "0.0.1-security",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.25.1",
+    "react": "^17.0.2",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",
-    "react-dom": "^15.1.0",
-    "webpack-dev-server": "^1.14.0"
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.5",
+    "uuid": "^8.3.2",
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.2.1"
   },
   "version": "0.1.0",
   "description": "Freeform survey response processing for humans.",
   "main": "3DuFApp.js",
   "scripts": {
-    "start": "webpack-dev-server --content-base ./",
+    "start": "webpack-dev-server",
     "build": "webpack",
     "sync": "git checkout gh-pages & git merge master & npm run build & git add -A & git commit -m 'rebuild' & git push origin +gh-pages & git checkout master"
   },
@@ -48,7 +53,7 @@
   "keywords": [
     "forms"
   ],
-  "author": "Aaron W. Heuckroth",
+  "author": "Aran P. Ink",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Nesciosquid/freeforme/issues"

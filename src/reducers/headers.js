@@ -10,7 +10,7 @@ const renameHeader = (list, oldHeader, newHeader) =>
   pureReplaceArray(list, oldHeader, newHeader);
 
 // reducer
-const headers = (state = [], action) => {
+export default headers = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HEADER':
       return addHeader(state, action.header);
@@ -50,5 +50,3 @@ const testRenameHeader = () => {
 testAddHeader();
 testRemoveHeader();
 testRenameHeader();
-
-module.exports = headers;

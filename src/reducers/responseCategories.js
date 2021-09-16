@@ -45,7 +45,7 @@ const renameCategory = (object, header, oldCategoryName, newCategoryName) => {
 };
 
 // reducer
-const responseCategories = (state = {}, action) => {
+export default responseCategories = (state = {}, action) => {
   switch (action.type) {
     case 'RENAME_CATEGORY':
       return renameCategory(

@@ -40,5 +40,5 @@ DraggableResponseCard.propTypes = {
   onItemDrop: React.PropTypes.func,
 };
 
-module.exports = new DragSource(Constants.ITEM_TYPES.RESPONSE_CARD,
+export default SourcedDraggableResponseCard = new DragSource(Constants.ITEM_TYPES.RESPONSE_CARD,
    responseCardSource, collect)(DraggableResponseCard);

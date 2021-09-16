@@ -31,7 +31,7 @@ const decrementUniqueResponse = (object, header, uniqueResponse) => {
 };
 
 // reducer
-const uniqueResponses = (state = {}, action) => {
+export default uniqueResponses = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_UNIQUE_RESPONSE':
       return incrementUniqueResponse(state, action.header, action.uniqueResponse);
@@ -110,5 +110,3 @@ const testDecrement = () => {
 testIncrement();
 testIncrement2();
 testDecrement();
-
-module.exports = uniqueResponses;
